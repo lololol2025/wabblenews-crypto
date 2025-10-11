@@ -94,7 +94,7 @@ export default function CryptoPriceTicker() {
       
       // Detect price changes - ONLY when price actually changes
       const newPriceChanges: PriceChange = {}
-      newCryptos.forEach(crypto => {
+      newCryptos.forEach((crypto: CryptoData) => {
         const prevPrice = previousPrices.current[crypto.id]
         if (prevPrice !== undefined && prevPrice !== crypto.current_price) {
           // Flash for ANY price change (more sensitive)
@@ -213,9 +213,9 @@ export default function CryptoPriceTicker() {
                   </span>
 
                   {/* Price */}
-                  <PriceDisplay 
+                  <PriceDisplay
                     price={crypto.current_price}
-                    isFlashing={priceFlash}
+                    isFlashing={!!priceFlash}
                     flashType={priceFlash}
                   />
 
