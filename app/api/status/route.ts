@@ -5,8 +5,6 @@ export async function GET() {
     // Test environment variables
     const envCheck = {
       DATABASE_URL: process.env.DATABASE_URL ? '✅ Set' : '❌ Missing',
-      ADMIN_EMAIL: process.env.ADMIN_EMAIL ? '✅ Set' : '❌ Missing',
-      ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? '✅ Set' : '❌ Missing',
       TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN ? '✅ Set' : '❌ Missing',
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ? '✅ Set' : '❌ Missing',
     }
@@ -17,14 +15,15 @@ export async function GET() {
       const { PrismaClient } = await import('@prisma/client')
       const prisma = new PrismaClient()
       await prisma.$connect()
-      dbStatus = '✅ Connected'
+      const articleCount = await prisma.article.count()
+      dbStatus = `✅ Connected (${articleCount} articles)`
       await prisma.$disconnect()
     } catch (error) {
       dbStatus = `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`
     }
 
     return NextResponse.json({
-      message: 'WabbleNews Status Check',
+      message: 'WabbleNews Status Check - SIMPLIFIED VERSION',
       environment: envCheck,
       database: dbStatus,
       timestamp: new Date().toISOString(),

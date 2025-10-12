@@ -34,8 +34,7 @@ model Article {
   sentiment           String?
   imageUrl            String?
   published           Boolean  @default(false)
-  authorId            String
-  author              Admin    @relation(fields: [authorId], references: [id])
+  authorId            String   // Simple string, no foreign key needed
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }

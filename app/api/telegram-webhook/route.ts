@@ -52,14 +52,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // Get admin user (first admin in database)
-    const admin = await prisma.admin.findFirst()
-    
-    if (!admin) {
-      console.log('⚠️ No admin found in database')
-      return NextResponse.json({ ok: true })
-    }
-
     // Analyze sentiment using AI
     const sentiment = await analyzeSentiment(text)
 
@@ -80,7 +72,7 @@ export async function POST(request: NextRequest) {
       imageUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`
     }
 
-    // Create article in database
+    // Create article in database (NO ADMIN NEEDED!)
     const article = await prisma.article.create({
       data: {
         title,
@@ -90,7 +82,7 @@ export async function POST(request: NextRequest) {
         sentiment,
         imageUrl,
         published: true,
-        authorId: admin.id,
+        authorId: 'telegram-bot', // Simple ID for Telegram posts
       },
     })
 
