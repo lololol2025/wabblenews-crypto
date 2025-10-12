@@ -4,13 +4,15 @@ import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import NewsGrid from '@/components/NewsGrid'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
+import TimezoneSelector from '@/components/TimezoneSelector'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 
 function HomeContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category') || undefined
   const { scrollYProgress } = useScroll()
+  const [timezone, setTimezone] = useState('UTC')
   
   const headerY = useTransform(scrollYProgress, [0, 0.3], [0, -100])
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 0.8, 0])
@@ -21,6 +23,9 @@ function HomeContent() {
       <CryptoPriceTicker />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-end mb-8">
+          <TimezoneSelector onTimezoneChange={setTimezone} />
+        </div>
         <motion.div
           style={{ y: headerY, opacity: headerOpacity }}
           className="mb-20"
@@ -76,7 +81,7 @@ function HomeContent() {
           </motion.div>
         </motion.div>
 
-        <NewsGrid />
+        <NewsGrid timezone={timezone} />
       </main>
 
       <footer className="glass-effect border-t border-gray-800 mt-24">

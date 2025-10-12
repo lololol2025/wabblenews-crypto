@@ -19,9 +19,10 @@ interface Article {
 
 interface NewsGridProps {
   category?: string
+  timezone?: string
 }
 
-export default function NewsGrid({ category }: NewsGridProps) {
+export default function NewsGrid({ category, timezone }: NewsGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -100,7 +101,7 @@ export default function NewsGrid({ category }: NewsGridProps) {
       }}
     >
       {articles.map((article, index) => (
-        <NewsCard key={article.id} article={article} index={index} />
+        <NewsCard key={article.id} article={article} index={index} timezone={timezone} />
       ))}
     </motion.div>
   )
