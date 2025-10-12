@@ -1,70 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import OpenAI from 'openai'
-
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-})
 
 interface TelegramMessage {
   message?: {
     text?: string
-    photo?: any[]
     caption?: string
-    chat?: {
-      id: number
-    }
+    photo?: Array<{ file_path: string }>
   }
   channel_post?: {
     text?: string
-    photo?: any[]
     caption?: string
-    chat?: {
-      id: number
-    }
+    photo?: Array<{ file_path: string }>
   }
 }
 
-// Analyze sentiment using AI
 async function analyzeSentiment(text: string): Promise<string> {
   try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a crypto market sentiment analyzer. Analyze the following crypto news and respond with ONLY ONE of these exact words:
-- "very bullish" - extremely positive news
-- "bullish" - positive news
-- "neutral" - neutral or informational news
-- "bearish" - negative news
-- "very bearish" - extremely negative news
-- "no impact" - news with minimal market impact
-
-Respond with nothing else, just one of these exact phrases.`
-        },
-        {
-          role: 'user',
-          content: text
-        }
-      ],
-      temperature: 0.3,
-      max_tokens: 10,
-    })
-
-    const sentiment = response.choices[0]?.message?.content?.toLowerCase().trim() || 'neutral'
+    // Simple keyword-based sentiment analysis
+    const positiveWords = ['bullish', 'moon', 'pump', 'surge', 'rally', 'gain', 'up', 'rise', 'breakout', 'breakthrough', 'positive', 'good', 'great', 'excellent', 'amazing', 'huge', 'massive', 'incredible']
+    const negativeWords = ['bearish', 'dump', 'crash', 'fall', 'drop', 'decline', 'down', 'negative', 'bad', 'terrible', 'awful', 'horrible', 'worst', 'fear', 'panic', 'sell']
     
-    // Map to our sentiment values
-    if (sentiment.includes('very bullish')) return 'very-positive'
-    if (sentiment.includes('bullish')) return 'positive'
-    if (sentiment.includes('very bearish')) return 'very-negative'
-    if (sentiment.includes('bearish')) return 'negative'
-    if (sentiment.includes('no impact')) return 'neutral'
+    const lowerText = text.toLowerCase()
     
+    const positiveCount = positiveWords.filter(word => lowerText.includes(word)).length
+    const negativeCount = negativeWords.filter(word => lowerText.includes(word)).length
+    
+    if (positiveCount > negativeCount) return 'positive'
+    if (negativeCount > positiveCount) return 'negative'
     return 'neutral'
   } catch (error) {
-    console.error('Error analyzing sentiment:', error)
+    console.error('Sentiment analysis error:', error)
     return 'neutral'
   }
 }
@@ -77,7 +42,6 @@ export async function POST(request: NextRequest) {
     const message = body.message || body.channel_post
     
     if (!message) {
-      // Silent return - no message to process
       return NextResponse.json({ ok: true })
     }
 
@@ -85,7 +49,6 @@ export async function POST(request: NextRequest) {
     const text = message.text || message.caption || ''
     
     if (!text || text.length < 10) {
-      // Silent return - text too short
       return NextResponse.json({ ok: true })
     }
 
@@ -93,7 +56,6 @@ export async function POST(request: NextRequest) {
     const admin = await prisma.admin.findFirst()
     
     if (!admin) {
-      // Silent fail - just log to console, no error response
       console.log('⚠️ No admin found in database')
       return NextResponse.json({ ok: true })
     }
@@ -111,11 +73,10 @@ export async function POST(request: NextRequest) {
       .replace(/(^-|-$)/g, '')
       .slice(0, 50)
 
-    // Get image URL if photo exists (NO MESSAGE SENDING - just fetching)
+    // Get image URL if photo exists
     let imageUrl = null
     if (message.photo && message.photo.length > 0) {
       const photo = message.photo[message.photo.length - 1]
-      // Only construct URL for display, DO NOT send any messages
       imageUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`
     }
 
@@ -133,26 +94,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Log to server console only (NOT to Telegram)
-    console.log('✅ Article created:', article.id, 'Sentiment:', sentiment)
-
-    // Return success without sending any messages
+    console.log(`✅ Article created: ${article.title}`)
     return NextResponse.json({ ok: true })
   } catch (error) {
-    // Log error to console only, don't send messages
-    console.error('❌ Webhook error:', error)
+    console.error('Telegram webhook error:', error)
     return NextResponse.json({ ok: true })
   }
 }
-
-// GET endpoint to verify webhook is working
-export async function GET() {
-  return NextResponse.json({ 
-    status: 'Telegram webhook is active',
-    timestamp: new Date().toISOString()
-  })
-}
-
-
-
-
