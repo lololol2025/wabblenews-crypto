@@ -46,7 +46,10 @@ export async function POST(request: NextRequest) {
   try {
     const body: TelegramMessage = await request.json()
     
+    console.log('🔥 WEBHOOK TRIGGERED!')
     console.log('📨 Received webhook:', JSON.stringify(body, null, 2))
+    console.log('🌍 Environment:', process.env.NODE_ENV)
+    console.log('🤖 Bot Token exists:', !!process.env.TELEGRAM_BOT_TOKEN)
     
     // Extract message data (works for both regular messages and channel posts)
     const message = body.message || body.channel_post
