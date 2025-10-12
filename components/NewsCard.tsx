@@ -118,90 +118,194 @@ export default function NewsCard({ article, index, timezone: propTimezone }: New
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 60, scale: 0.85 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 80, scale: 0.8, rotateX: -15 }}
+      animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
       transition={{ 
-        duration: 0.8, 
-        delay: index * 0.1, 
-        ease: [0.16, 1, 0.3, 1]
+        duration: 1.2, 
+        delay: index * 0.15, 
+        ease: [0.25, 0.46, 0.45, 0.94],
+        type: "spring",
+        stiffness: 100,
+        damping: 20
       }}
-      className="glass-effect rounded-3xl overflow-hidden group relative"
+      className="relative group"
       style={{
-        border: `2px solid ${sentimentColors.border}`,
-        boxShadow: `0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px ${sentimentColors.glow}20`
+        perspective: '1000px',
+        transformStyle: 'preserve-3d'
       }}
     >
-      <Link href={`/article/${article.id}`} className="block relative">
-        {article.imageUrl && (
-          <div className="relative h-64 overflow-hidden bg-black">
-            <img
-              src={article.imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-            <div className="absolute top-4 left-4">
-              <span 
-                className="px-5 py-2 backdrop-blur-md text-sm font-black rounded-full border-2"
-                style={{
-                  backgroundColor: sentimentColors.bg,
-                  color: sentimentColors.text,
-                  borderColor: sentimentColors.border,
-                  boxShadow: `inset 0 0 30px ${sentimentColors.glow}`
-                }}
-              >
-                {sentimentColors.label}
-              </span>
-            </div>
-          </div>
-        )}
-        
-        <div className="p-10">
-          {!article.imageUrl && (
-            <div className="mb-5">
-              <span 
-                className="inline-block px-5 py-2 bg-primary/40 backdrop-blur-md text-primary text-sm font-black rounded-full border-2 border-primary"
-                style={{ boxShadow: 'inset 0 0 30px rgba(0, 212, 255, 0.9)' }}
-              >
-                {article.category}
-              </span>
+      {/* Advanced Background Effects */}
+      <div 
+        className="absolute inset-0 rounded-3xl opacity-20 blur-xl"
+        style={{
+          background: `linear-gradient(135deg, ${sentimentColors.border}40, ${sentimentColors.glow}20)`,
+          transform: 'translateZ(-50px)'
+        }}
+      />
+      
+      {/* Main Card */}
+      <div
+        className="relative rounded-3xl overflow-hidden backdrop-blur-xl border-2 transition-all duration-500 group-hover:scale-[1.02] group-hover:rotate-1"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 50%, rgba(0,0,0,0.8) 100%)',
+          borderColor: sentimentColors.border,
+          boxShadow: `
+            0 0 0 1px ${sentimentColors.border}30,
+            0 8px 32px rgba(0,0,0,0.8),
+            0 0 60px ${sentimentColors.glow}40,
+            inset 0 1px 0 rgba(255,255,255,0.1),
+            inset 0 -1px 0 rgba(0,0,0,0.5)
+          `,
+          transform: 'translateZ(0)'
+        }}
+      >
+        <Link href={`/article/${article.id}`} className="block relative h-full">
+          {/* Advanced Image Section */}
+          {article.imageUrl && (
+            <div className="relative h-72 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/60 z-10" />
+              <img
+                src={article.imageUrl}
+                alt={article.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              
+              {/* Advanced Sentiment Badge */}
+              <div className="absolute top-6 left-6 z-20">
+                <div 
+                  className="relative px-6 py-3 backdrop-blur-xl rounded-2xl border-2 font-black text-sm tracking-wider"
+                  style={{
+                    background: `linear-gradient(135deg, ${sentimentColors.bg}80, ${sentimentColors.bg}40)`,
+                    color: sentimentColors.text,
+                    borderColor: sentimentColors.border,
+                    boxShadow: `
+                      0 0 0 1px ${sentimentColors.border}50,
+                      0 8px 32px rgba(0,0,0,0.6),
+                      0 0 40px ${sentimentColors.glow}60,
+                      inset 0 1px 0 rgba(255,255,255,0.2)
+                    `
+                  }}
+                >
+                  <div className="absolute inset-0 rounded-2xl opacity-30 blur-sm" 
+                       style={{ background: sentimentColors.glow }} />
+                  <span className="relative z-10">{sentimentColors.label}</span>
+                </div>
+              </div>
+              
+              {/* Floating Elements */}
+              <div className="absolute top-6 right-6 z-20">
+                <div className="w-3 h-3 rounded-full animate-pulse" 
+                     style={{ backgroundColor: sentimentColors.border }} />
+              </div>
             </div>
           )}
-          
-          <h2 className="text-3xl font-black text-white mb-5 line-clamp-2 leading-tight tracking-tighter">
-            {article.title}
-          </h2>
-          
-          <p className="text-gray-500 mb-8 line-clamp-4 text-xl leading-loose font-light" style={{ lineHeight: '1.9' }}>
-            {article.content}
-          </p>
-          
-          <div className="flex items-center justify-between pt-6 border-t border-gray-800/50">
-            <div className="flex items-center space-x-4">
-              <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-black"
-                style={{
-                  backgroundColor: `${sentimentColors.bg}80`,
-                  borderColor: sentimentColors.border,
-                  borderWidth: '2px',
-                  color: sentimentColors.text,
-                  boxShadow: `inset 0 0 30px ${sentimentColors.glow}`
-                }}
-              >
-                {article.author.name.charAt(0)}
+        
+          {/* Advanced Content Section */}
+          <div className="p-8 relative">
+            {/* Category Badge for Non-Image Articles */}
+            {!article.imageUrl && (
+              <div className="mb-6">
+                <div 
+                  className="inline-block px-6 py-3 backdrop-blur-xl rounded-2xl border-2 font-black text-sm tracking-wider"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 212, 255, 0.1))',
+                    color: '#00D4FF',
+                    borderColor: '#00D4FF',
+                    boxShadow: `
+                      0 0 0 1px rgba(0, 212, 255, 0.5),
+                      0 8px 32px rgba(0,0,0,0.6),
+                      0 0 40px rgba(0, 212, 255, 0.4),
+                      inset 0 1px 0 rgba(255,255,255,0.2)
+                    `
+                  }}
+                >
+                  {article.category}
+                </div>
               </div>
-              <div>
-                <div className="font-bold text-white text-base">{article.author.name}</div>
-                <div className="text-gray-600 text-sm font-medium">Author</div>
+            )}
+            
+            {/* Advanced Title */}
+            <h2 className="text-4xl font-black text-white mb-6 line-clamp-2 leading-tight tracking-tighter group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-gray-200 group-hover:to-white transition-all duration-500">
+              {article.title}
+            </h2>
+            
+            {/* Advanced Content */}
+            <p className="text-gray-400 mb-8 line-clamp-4 text-lg leading-relaxed font-medium" style={{ lineHeight: '1.8' }}>
+              {article.content}
+            </p>
+          
+            {/* Advanced Footer */}
+            <div className="flex items-center justify-between pt-8 border-t border-gradient-to-r from-transparent via-gray-700/50 to-transparent">
+              <div className="flex items-center space-x-5">
+                {/* Advanced Author Avatar */}
+                <div 
+                  className="relative w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-black transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+                  style={{
+                    background: `linear-gradient(135deg, ${sentimentColors.bg}90, ${sentimentColors.bg}60)`,
+                    borderColor: sentimentColors.border,
+                    borderWidth: '3px',
+                    color: sentimentColors.text,
+                    boxShadow: `
+                      0 0 0 2px ${sentimentColors.border}40,
+                      0 8px 32px rgba(0,0,0,0.6),
+                      0 0 40px ${sentimentColors.glow}50,
+                      inset 0 2px 0 rgba(255,255,255,0.2),
+                      inset 0 -2px 0 rgba(0,0,0,0.3)
+                    `
+                  }}
+                >
+                  <div className="absolute inset-0 rounded-2xl opacity-20 blur-sm" 
+                       style={{ background: sentimentColors.glow }} />
+                  <span className="relative z-10">{article.author.name.charAt(0)}</span>
+                </div>
+                <div>
+                  <div className="font-black text-white text-lg tracking-tight">{article.author.name}</div>
+                  <div className="text-gray-500 text-sm font-semibold uppercase tracking-wider">Author</div>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <div className="text-primary font-black text-3xl tracking-tight">{timeAgo}</div>
-              <div className="text-gray-500 text-base font-semibold uppercase tracking-wide">{utcTime} {timezone}</div>
+              
+              {/* Advanced Time Display */}
+              <div className="text-right">
+                <div 
+                  className="text-4xl font-black tracking-tighter mb-1"
+                  style={{
+                    background: `linear-gradient(135deg, ${sentimentColors.text}, ${sentimentColors.border})`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  {timeAgo}
+                </div>
+                <div className="text-gray-500 text-sm font-bold uppercase tracking-widest">
+                  {utcTime} {timezone}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
+      
+      {/* Advanced Corner Accents */}
+      <div className="absolute top-0 right-0 w-20 h-20 opacity-30">
+        <div 
+          className="absolute top-0 right-0 w-8 h-8 rounded-bl-3xl"
+          style={{ 
+            background: `linear-gradient(135deg, ${sentimentColors.border}60, transparent)`,
+            filter: 'blur(1px)'
+          }}
+        />
+      </div>
+      
+      <div className="absolute bottom-0 left-0 w-20 h-20 opacity-30">
+        <div 
+          className="absolute bottom-0 left-0 w-8 h-8 rounded-tr-3xl"
+          style={{ 
+            background: `linear-gradient(315deg, ${sentimentColors.border}60, transparent)`,
+            filter: 'blur(1px)'
+          }}
+        />
+      </div>
     </motion.article>
   )
 }
