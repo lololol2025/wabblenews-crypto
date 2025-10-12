@@ -6,11 +6,19 @@ interface TelegramMessage {
     text?: string
     caption?: string
     photo?: Array<{ file_path: string }>
+    chat?: {
+      id: number
+      type: string
+    }
   }
   channel_post?: {
     text?: string
     caption?: string
     photo?: Array<{ file_path: string }>
+    chat?: {
+      id: number
+      type: string
+    }
   }
 }
 
