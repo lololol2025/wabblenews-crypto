@@ -12,6 +12,7 @@ interface NewsCardProps {
     content: string
     category: string
     sentiment?: string
+    sentimentIntensity?: string
     imageUrl: string | null
     createdAt: string
     author: {
@@ -34,25 +35,52 @@ export default function NewsCard({ article, index }: NewsCardProps) {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['7deg', '-7deg'])
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-7deg', '7deg'])
   
-  const sentimentStyles = {
-    'very-positive': 'neon-border-green',
-    'positive': 'neon-border-green',
-    'very-negative': 'neon-border-red',
-    'negative': 'neon-border-red',
-    'neutral': 'neon-border-blue',
+  const getSentimentColors = (sentiment: string, intensity: string) => {
+    switch (sentiment) {
+      case 'very-positive':
+        return {
+          bg: 'rgba(0, 255, 127, 0.3)',
+          text: '#00FF7F',
+          border: '#00FF7F',
+          glow: 'rgba(0, 255, 127, 0.8)',
+          label: 'VERY BULLISH'
+        }
+      case 'positive':
+        return {
+          bg: 'rgba(0, 212, 255, 0.3)',
+          text: '#00D4FF',
+          border: '#00D4FF',
+          glow: 'rgba(0, 212, 255, 0.8)',
+          label: 'BULLISH'
+        }
+      case 'very-negative':
+        return {
+          bg: 'rgba(139, 0, 0, 0.3)',
+          text: '#FF0040',
+          border: '#8B0000',
+          glow: 'rgba(139, 0, 0, 0.8)',
+          label: 'VERY BEARISH'
+        }
+      case 'negative':
+        return {
+          bg: 'rgba(255, 0, 64, 0.3)',
+          text: '#FF0040',
+          border: '#FF0040',
+          glow: 'rgba(255, 0, 64, 0.8)',
+          label: 'BEARISH'
+        }
+      default:
+        return {
+          bg: 'rgba(74, 144, 226, 0.3)',
+          text: '#4A90E2',
+          border: '#4A90E2',
+          glow: 'rgba(74, 144, 226, 0.8)',
+          label: 'NEUTRAL'
+        }
+    }
   }
 
-  const sentimentClass = sentimentStyles[article.sentiment as keyof typeof sentimentStyles] || sentimentStyles.neutral
-  
-  const sentimentLabels = {
-    'very-positive': 'VERY BULLISH',
-    'positive': 'BULLISH',
-    'very-negative': 'VERY BEARISH',
-    'negative': 'BEARISH',
-    'neutral': 'NEUTRAL',
-  }
-  
-  const sentimentLabel = sentimentLabels[article.sentiment as keyof typeof sentimentLabels] || 'NEUTRAL'
+  const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'low')
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -91,7 +119,14 @@ export default function NewsCard({ article, index }: NewsCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       whileTap={{ scale: 0.96 }}
-      className={`glass-effect rounded-3xl overflow-hidden group ${sentimentClass} relative`}
+      className="glass-effect rounded-3xl overflow-hidden group relative"
+      style={{
+        border: `2px solid ${isHovered ? sentimentColors.border + '40' : 'rgba(255, 255, 255, 0.1)'}`,
+        boxShadow: isHovered
+          ? `0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px ${sentimentColors.glow}30`
+          : '0 20px 40px rgba(0, 0, 0, 0.6)',
+        transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }}
     >
       <Link href={`/article/${article.id}`} className="block relative" style={{ transform: 'translateZ(20px)' }}>
         {article.imageUrl && (
@@ -125,28 +160,31 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   stiffness: 500,
                   damping: 30
                 }}
-                className={`px-5 py-2 backdrop-blur-md text-sm font-black rounded-full border-2 ${
-                  article.sentiment === 'very-positive' || article.sentiment === 'positive'
-                    ? 'bg-green-500/30 text-green-400 border-green-400'
-                    : article.sentiment === 'very-negative' || article.sentiment === 'negative'
-                    ? 'bg-red-500/30 text-red-400 border-red-400'
-                    : 'bg-blue-500/30 text-blue-400 border-blue-400'
-                }`}
-                style={{ 
-                  boxShadow: article.sentiment === 'very-positive' || article.sentiment === 'positive'
-                    ? 'inset 0 0 30px rgba(0, 255, 127, 0.6)'
-                    : article.sentiment === 'very-negative' || article.sentiment === 'negative'
-                    ? 'inset 0 0 30px rgba(255, 0, 64, 0.6)'
-                    : 'inset 0 0 30px rgba(0, 212, 255, 0.6)'
+                className="px-5 py-2 backdrop-blur-md text-sm font-black rounded-full border-2"
+                style={{
+                  backgroundColor: sentimentColors.bg,
+                  color: sentimentColors.text,
+                  borderColor: sentimentColors.border,
+                  boxShadow: `inset 0 0 30px ${sentimentColors.glow}`
                 }}
               >
-                {sentimentLabel}
+                {sentimentColors.label}
               </motion.span>
             </div>
           </div>
         )}
         
-        <div className="p-10" style={{ transform: 'translateZ(40px)' }}>
+        <motion.div
+          className="p-10"
+          style={{
+            transform: 'translateZ(40px)',
+            background: isHovered ? `linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)` : 'transparent'
+          }}
+          animate={{
+            background: isHovered ? `linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)` : 'transparent'
+          }}
+          transition={{ duration: 0.3 }}
+        >
           {!article.imageUrl && (
             <div className="mb-5">
               <motion.span 
@@ -166,10 +204,10 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             </div>
           )}
           
-          <motion.h2 
-            className="text-3xl font-black text-white mb-5 line-clamp-2 leading-tight tracking-tighter"
+          <motion.h2
+            className="text-3xl font-black mb-5 line-clamp-2 leading-tight tracking-tighter"
             animate={{
-              color: isHovered ? '#00D4FF' : '#FFFFFF'
+              color: isHovered ? sentimentColors.text : '#FFFFFF'
             }}
             transition={{ duration: 0.4 }}
           >
@@ -192,9 +230,13 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   stiffness: 300,
                   damping: 25
                 }}
-                className="w-14 h-14 rounded-full bg-primary/40 border-2 border-primary flex items-center justify-center text-primary font-black text-lg"
-                style={{ 
-                  boxShadow: 'inset 0 0 30px rgba(0, 212, 255, 1.0)',
+                className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-black"
+                style={{
+                  backgroundColor: `${sentimentColors.bg}80`,
+                  borderColor: sentimentColors.border,
+                  borderWidth: '2px',
+                  color: sentimentColors.text,
+                  boxShadow: `inset 0 0 30px ${sentimentColors.glow}`,
                   transform: 'translateZ(60px)'
                 }}
               >
@@ -215,7 +257,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               <div className="text-gray-500 text-base font-semibold uppercase tracking-wide">{timeAgo.split(' ').slice(1).join(' ')}</div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </Link>
     </motion.article>
   )

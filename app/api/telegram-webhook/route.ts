@@ -62,13 +62,17 @@ export async function POST(request: NextRequest) {
     // Check if it's from your specific channel
     const chatId = message.chat?.id
     const expectedChannelId = -1002709853773 // Your channel ID
-    
+
     console.log(`📊 Chat ID: ${chatId}, Expected: ${expectedChannelId}`)
-    
+
     if (chatId !== expectedChannelId) {
       console.log(`❌ Message not from target channel. Chat ID: ${chatId}`)
       return NextResponse.json({ ok: true })
     }
+
+    // For channel posts, the chat ID is the channel ID
+    // For regular messages, chat ID is the sender's chat ID
+    console.log(`✅ Message validated from channel: ${chatId}`)
 
     // Get text content
     const text = message.text || message.caption || ''
