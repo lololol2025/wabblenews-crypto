@@ -38,17 +38,34 @@ export async function POST(request: NextRequest) {
   try {
     const body: TelegramMessage = await request.json()
     
+    console.log('📨 Received webhook:', JSON.stringify(body, null, 2))
+    
     // Extract message data (works for both regular messages and channel posts)
     const message = body.message || body.channel_post
     
     if (!message) {
+      console.log('❌ No message found in webhook')
+      return NextResponse.json({ ok: true })
+    }
+
+    // Check if it's from your specific channel
+    const chatId = message.chat?.id
+    const expectedChannelId = -1002709853773 // Your channel ID
+    
+    console.log(`📊 Chat ID: ${chatId}, Expected: ${expectedChannelId}`)
+    
+    if (chatId !== expectedChannelId) {
+      console.log(`❌ Message not from target channel. Chat ID: ${chatId}`)
       return NextResponse.json({ ok: true })
     }
 
     // Get text content
     const text = message.text || message.caption || ''
     
-    if (!text || text.length < 10) {
+    console.log(`📝 Message text: "${text}"`)
+    
+    if (!text || text.length < 5) {
+      console.log('❌ Text too short or empty')
       return NextResponse.json({ ok: true })
     }
 
