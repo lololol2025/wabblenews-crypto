@@ -3,15 +3,15 @@ import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
 
 // This endpoint initializes the first admin account
-export async function POST() {
+export async function GET() {
   try {
     // Check if any admin exists
     const adminCount = await prisma.admin.count()
     
     if (adminCount > 0) {
       return NextResponse.json(
-        { error: 'Admin already exists' },
-        { status: 400 }
+        { message: 'Admin already exists', adminCount },
+        { status: 200 }
       )
     }
 
@@ -35,10 +35,14 @@ export async function POST() {
   } catch (error) {
     console.error('Init error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
+}
+
+export async function POST() {
+  return GET()
 }
 
 
