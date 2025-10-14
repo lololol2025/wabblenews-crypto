@@ -18,7 +18,49 @@ function HomeContent() {
   const headerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 0.8, 0])
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen pt-24 relative">
+      {/* Premium Background Effects */}
+      <div className="fixed inset-0 -z-10">
+        {/* Main gradient background */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at top, rgba(0, 212, 255, 0.15) 0%, rgba(0, 255, 127, 0.1) 25%, rgba(255, 100, 0, 0.05) 50%, rgba(0, 0, 0, 0.9) 100%)'
+          }}
+        />
+
+        {/* Animated gradient orbs */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-40 right-20 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-40 left-1/4 w-72 h-72 bg-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+
+        {/* Floating particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-white/10 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -100, 0],
+                x: [0, Math.random() * 50 - 25, 0],
+                opacity: [0.1, 0.4, 0.1],
+                scale: [0.5, 1.5, 0.5]
+              }}
+              transition={{
+                duration: 8 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 8,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
       <Navbar />
       <CryptoPriceTicker />
       

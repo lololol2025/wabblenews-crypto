@@ -26,33 +26,64 @@ export default function Navbar() {
       }}
       className="fixed top-0 left-0 right-0 z-50"
     >
-      {/* Premium Glass Morphism Background */}
+      {/* Ultra Premium Glass Morphism Background */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(20,20,20,0.9) 50%, rgba(0,0,0,0.95) 100%)',
-          backdropFilter: 'blur(30px) saturate(180%)',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)'
+          background: 'linear-gradient(135deg, rgba(0,0,0,0.98) 0%, rgba(20,20,20,0.95) 50%, rgba(0,0,0,0.98) 100%)',
+          backdropFilter: 'blur(40px) saturate(200%)',
+          borderBottom: '1px solid rgba(255,255,255,0.15)',
+          boxShadow: `
+            0 12px 40px rgba(0,0,0,0.9),
+            0 0 0 1px rgba(255,255,255,0.05),
+            inset 0 1px 0 rgba(255,255,255,0.2),
+            inset 0 -1px 0 rgba(0,0,0,0.3)
+          `
         }}
       />
 
-      {/* Animated Accent Line */}
+      {/* Premium Animated Accent Line */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1"
+        className="absolute bottom-0 left-0 right-0 h-2"
         style={{
-          background: 'linear-gradient(90deg, #00D4FF, #00FF7F, #FF6400, #FF0040)',
-          backgroundSize: '400% 100%'
+          background: 'linear-gradient(90deg, #00D4FF, #00FF7F, #FF6400, #FF0040, #A855F7)',
+          backgroundSize: '500% 100%'
         }}
         animate={{
           backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
         }}
         transition={{
-          duration: 3,
+          duration: 4,
           repeat: Infinity,
           ease: "linear"
         }}
       />
+
+      {/* Floating Background Particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white/20 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              opacity: [0.2, 0.6, 0.2],
+              scale: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 4 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 4,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </div>
 
         <div className="flex justify-between items-center h-28">
           <Link href="/" className="flex items-center gap-6 group">
@@ -131,12 +162,17 @@ export default function Navbar() {
                       boxShadow: '0 0 30px rgba(0, 212, 255, 0.6)'
                     }}
                     whileTap={{ scale: 0.96 }}
-                    className="relative px-8 py-4 rounded-2xl text-lg font-bold overflow-hidden group"
+                    className="relative px-10 py-5 rounded-2xl text-lg font-black overflow-hidden group"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)'
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
+                      backdropFilter: 'blur(15px)',
+                      border: '2px solid rgba(255,255,255,0.15)',
+                      boxShadow: `
+                        0 12px 40px rgba(0,0,0,0.8),
+                        0 0 0 1px rgba(255,255,255,0.05),
+                        inset 0 1px 0 rgba(255,255,255,0.2),
+                        inset 0 -1px 0 rgba(0,0,0,0.3)
+                      `
                     }}
                   >
                     {/* Animated gradient background */}
