@@ -177,12 +177,7 @@ export default function CryptoPriceTicker() {
   const tripledCryptos = [...cryptos, ...cryptos, ...cryptos]
 
   return (
-    <motion.div
-      className="w-full overflow-hidden sticky top-[96px] z-40"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div className="w-full overflow-hidden sticky top-[96px] z-40">
       {/* Premium glass morphism background */}
       <div
         className="absolute inset-0"
@@ -195,19 +190,12 @@ export default function CryptoPriceTicker() {
       />
 
       {/* Animated accent line */}
-      <motion.div
+      <div
         className="absolute bottom-0 left-0 h-1"
         style={{
           background: 'linear-gradient(90deg, #00D4FF, #00FF7F, #FF6400, #FF0040)',
-          backgroundSize: '400% 100%'
-        }}
-        animate={{
-          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear"
+          backgroundSize: '400% 100%',
+          animation: 'gradient-shift 3s linear infinite'
         }}
       />
 
@@ -219,7 +207,7 @@ export default function CryptoPriceTicker() {
             const priceFlash = priceChanges[crypto.id]?.flash
 
             return (
-              <motion.div
+              <div
                 key={`${crypto.id}-${index}`}
                 className="ticker-item inline-flex items-center px-8 py-4 mx-5 border-2 group relative overflow-hidden cursor-pointer"
                 style={{
@@ -233,116 +221,65 @@ export default function CryptoPriceTicker() {
                   boxShadow: priceFlash
                     ? `0 0 20px ${priceFlash === 'up' ? 'rgba(0, 255, 127, 0.4)' : 'rgba(255, 0, 64, 0.4)'}, inset 0 0 15px ${priceFlash === 'up' ? 'rgba(0, 255, 127, 0.2)' : 'rgba(255, 0, 64, 0.2)'}`
                     : '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)',
+                  transform: priceFlash ? 'translateY(-1px)' : 'translateY(0)',
+                  transition: 'all 0.3s ease'
                 }}
-                whileHover={{
-                  scale: 1.05,
-                  y: -2,
-                  boxShadow: `0 0 30px ${isPositive ? 'rgba(0, 255, 127, 0.6)' : 'rgba(255, 0, 64, 0.6)'}, 0 12px 40px rgba(0,0,0,0.8)`
-                }}
-                animate={{
-                  y: priceFlash ? -1 : 0,
-                }}
-                transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
               >
                 {/* Premium gradient background on hover */}
-                <motion.div
-                  className="absolute inset-0 opacity-0"
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500"
                   style={{
                     background: isPositive
                       ? 'linear-gradient(135deg, rgba(0, 255, 127, 0.15) 0%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 255, 127, 0.15) 100%)'
                       : 'linear-gradient(135deg, rgba(255, 0, 64, 0.15) 0%, rgba(255, 100, 0, 0.1) 50%, rgba(255, 0, 64, 0.15) 100%)',
                     backgroundSize: '200% 200%',
-                  }}
-                  animate={{
-                    opacity: [0, 1, 0],
-                    backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  whileHover={{
-                    opacity: 0.3,
+                    animation: 'gradient-shift 3s linear infinite'
                   }}
                 />
 
                 {/* Animated border glow */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl"
+                <div
+                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-80 transition-opacity duration-500"
                   style={{
                     background: `conic-gradient(from 0deg, ${isPositive ? '#00FF7F' : '#FF0040'}, ${isPositive ? '#00D4FF' : '#FF6400'}, ${isPositive ? '#00FF7F' : '#FF0040'})`,
                     padding: '2px',
                     mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                     maskComposite: 'xor',
-                    WebkitMaskComposite: 'xor'
-                  }}
-                  animate={{
-                    rotate: [0, 360]
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  whileHover={{
-                    opacity: 0.8,
+                    WebkitMaskComposite: 'xor',
+                    animation: 'spin 8s linear infinite'
                   }}
                 />
 
                 {/* Premium glow on hover */}
-                <motion.div
-                  className="absolute inset-0 rounded-3xl opacity-0"
+                <div
+                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500"
                   style={{
                     boxShadow: isPositive
                       ? '0 0 40px rgba(0, 255, 127, 0.5), inset 0 0 40px rgba(0, 255, 127, 0.3)'
                       : '0 0 40px rgba(255, 0, 64, 0.5), inset 0 0 40px rgba(255, 0, 64, 0.3)',
-                  }}
-                  animate={{
-                    opacity: [0, 0.6, 0],
-                    scale: [1, 1.05, 1]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  whileHover={{
-                    opacity: 1,
-                    scale: 1.1,
+                    animation: 'pulse-glow 2s ease-in-out infinite'
                   }}
                 />
 
                 {/* Content */}
                 <div className="relative z-10 flex items-center">
                   {/* Premium Coin Logo */}
-                  <motion.div
-                    className="relative w-11 h-11 mr-5 flex-shrink-0"
+                  <div
+                    className="relative w-11 h-11 mr-5 flex-shrink-0 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300"
                     style={{
                       filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4))',
                     }}
-                    whileHover={{
-                      scale: 1.2,
-                      rotate: 15,
-                      filter: `drop-shadow(0 6px 20px ${isPositive ? 'rgba(0, 255, 127, 0.4)' : 'rgba(255, 0, 64, 0.4)'})`
-                    }}
-                    animate={{
-                      rotate: priceFlash ? [0, 5, -5, 0] : 0
-                    }}
-                    transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
                   >
                     {/* Logo glow effect */}
-                    <motion.div
+                    <div
                       className="absolute inset-0 rounded-full"
                       style={{
                         background: `radial-gradient(circle, ${isPositive ? 'rgba(0, 255, 127, 0.3)' : 'rgba(255, 0, 64, 0.3)'} 0%, transparent 70%)`,
                         filter: 'blur(4px)',
+                        opacity: priceFlash ? 0.7 : 0.3,
+                        transform: priceFlash ? 'scale(1.3)' : 'scale(1)',
+                        transition: 'all 0.8s ease'
                       }}
-                      animate={{
-                        scale: priceFlash ? [1, 1.3, 1] : 1,
-                        opacity: priceFlash ? [0.3, 0.7, 0.3] : 0.3
-                      }}
-                      transition={{ duration: 0.8 }}
                     />
 
                     <Image
@@ -355,23 +292,15 @@ export default function CryptoPriceTicker() {
                   </div>
 
                   {/* Premium Symbol */}
-                  <motion.span
-                    className="text-white font-black text-xl uppercase mr-5 tracking-wide"
-                    animate={{
-                      letterSpacing: ['0.05em', '0.1em', '0.05em']
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    whileHover={{
-                      scale: 1.05,
-                      color: isPositive ? '#00FF7F' : '#FF0040'
+                  <span
+                    className="text-white font-black text-xl uppercase mr-5 tracking-wide group-hover:scale-105 transition-all duration-300"
+                    style={{
+                      letterSpacing: '0.05em',
+                      animation: 'pulse-glow 3s ease-in-out infinite'
                     }}
                   >
                     {crypto.symbol}
-                  </motion.span>
+                  </span>
 
                   {/* Premium Price */}
                   <PriceDisplay
@@ -381,49 +310,38 @@ export default function CryptoPriceTicker() {
                   />
 
                   {/* Premium 24h Change */}
-                  <motion.span
-                    className="font-black text-xl flex items-center gap-2 relative overflow-hidden"
+                  <span
+                    className="font-black text-xl flex items-center gap-2 relative overflow-hidden group-hover:scale-105 transition-all duration-300"
                     style={{
                       color: borderColor,
-                    }}
-                    animate={{
-                      scale: priceFlash ? [1, 1.1, 1] : 1,
-                    }}
-                    transition={{ duration: 0.8 }}
-                    whileHover={{
-                      scale: 1.05,
+                      transform: priceFlash ? 'scale(1.1)' : 'scale(1)',
                       filter: `drop-shadow(0 0 15px ${borderColor})`
                     }}
                   >
-                    <motion.span
+                    <span
                       className="text-2xl"
-                      animate={{
-                        scale: priceFlash ? [1, 1.3, 1] : 1,
-                        rotate: priceFlash ? [0, 10, -10, 0] : 0
+                      style={{
+                        transform: priceFlash ? 'scale(1.3) rotate(10deg)' : 'scale(1) rotate(0deg)',
+                        transition: 'all 0.6s ease'
                       }}
-                      transition={{ duration: 0.6 }}
                     >
                       {isPositive ? '↗' : '↘'}
-                    </motion.span>
+                    </span>
 
                     <span className="relative">
                       {Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%
 
                       {/* Animated underline */}
-                      <motion.div
+                      <div
                         className="absolute bottom-0 left-0 h-0.5"
-                        style={{ background: borderColor }}
-                        animate={{
-                          width: ['0%', '100%', '0%']
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
+                        style={{ 
+                          background: borderColor,
+                          width: '0%',
+                          animation: 'gradient-shift 2s ease-in-out infinite'
                         }}
                       />
                     </span>
-                  </motion.span>
+                  </span>
                 </div>
 
                 {/* Top shine effect */}
