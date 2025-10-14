@@ -87,6 +87,43 @@ a {
   50% { opacity: 0.8; transform: scale(1.05); }
 }
 
+/* Crypto Ticker Styles */
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 14px 0;
+}
+
+.ticker-content {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: scroll 60s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  flex-shrink: 0;
+}
+
+.ticker-item:hover {
+  transform: scale(1.08) translateY(-4px);
+  z-index: 10;
+}
+
 @keyframes background-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
