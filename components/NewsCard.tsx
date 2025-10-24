@@ -115,6 +115,17 @@ export default function NewsCard({ article, index }: NewsCardProps) {
     setIsHovered(false)
   }
 
+  // Add advanced hover state management
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+  }
+
   return (
     <div className="relative">
       <motion.article
@@ -127,16 +138,26 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
         className="glass-effect rounded-2xl overflow-hidden group relative"
-            style={{
-              border: `3px solid ${sentimentColors.border}${isHovered ? 'FF' : '80'}`,
-              boxShadow: isHovered
-                ? `0 30px 80px rgba(0, 0, 0, 0.95), 0 0 80px ${sentimentColors.glow}, 0 0 150px ${sentimentColors.glow}50, inset 0 1px 0 rgba(255,255,255,0.1)`
-                : `0 25px 50px rgba(0, 0, 0, 0.8), 0 0 40px ${sentimentColors.glow}60, inset 0 1px 0 rgba(255,255,255,0.05)`,
-              transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              backdropFilter: 'blur(20px)',
-              filter: 'contrast(1.1) brightness(1.05)'
-            }}
+        whileHover={{ 
+          scale: 1.02,
+          rotateY: 2,
+          rotateX: -1,
+          transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }
+        }}
+        whileTap={{ scale: 0.98 }}
+        style={{
+          border: `3px solid ${sentimentColors.border}${isHovered ? 'FF' : '80'}`,
+          boxShadow: isHovered
+            ? `0 40px 100px rgba(0, 0, 0, 0.98), 0 0 100px ${sentimentColors.glow}, 0 0 200px ${sentimentColors.glow}60, inset 0 2px 0 rgba(255,255,255,0.15), inset 0 -2px 0 rgba(0,0,0,0.1)`
+            : `0 25px 50px rgba(0, 0, 0, 0.8), 0 0 40px ${sentimentColors.glow}60, inset 0 1px 0 rgba(255,255,255,0.05)`,
+          transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          backdropFilter: 'blur(20px)',
+          filter: isHovered ? 'contrast(1.15) brightness(1.1) saturate(1.1)' : 'contrast(1.1) brightness(1.05)',
+          transformStyle: 'preserve-3d',
+          perspective: '1000px'
+        }}
       >
       <Link href={`/article/${article.id}`} className="block relative pointer-events-none">
         {article.images && article.images.length > 0 && (
@@ -212,8 +233,13 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         <div className="p-6 flex flex-col h-[280px]">
           {/* Sentiment tag inline with text */}
           <div className="flex items-start gap-3 mb-4">
-            <span 
+            <motion.span 
               className="px-4 py-2 rounded-full text-sm font-black whitespace-nowrap flex-shrink-0"
+              whileHover={{ 
+                scale: 1.05,
+                rotateZ: 1,
+                transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }
+              }}
               style={{
                 backgroundColor: sentimentColors.bg,
                 color: sentimentColors.text,
@@ -222,11 +248,12 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 fontWeight: 900,
                 textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                 filter: 'contrast(1.2) brightness(1.1)',
-                backdropFilter: 'blur(10px)'
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
               }}
             >
               {sentimentColors.label}
-            </span>
+            </motion.span>
             <h2
               className="font-black leading-tight tracking-tight flex-1 text-white"
               style={{ 
@@ -268,29 +295,47 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 window.location.href = `/article/${article.id}#comments`
               }}
               whileHover={{ 
-                scale: 1.05,
-                boxShadow: `0 0 30px ${sentimentColors.glow}, 0 0 60px ${sentimentColors.glow}40`
+                scale: 1.08,
+                rotateY: 3,
+                rotateX: -2,
+                boxShadow: `0 0 40px ${sentimentColors.glow}, 0 0 80px ${sentimentColors.glow}60, 0 15px 35px rgba(0,0,0,0.5)`,
+                transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }
               }}
-            className="relative px-8 py-4 rounded-xl text-base font-black flex items-center gap-3 overflow-hidden group/btn pointer-events-auto cursor-pointer"
-            style={{
-              background: `linear-gradient(135deg, ${sentimentColors.bg}90, ${sentimentColors.bg}60)`,
-              color: sentimentColors.text,
-              border: `3px solid ${sentimentColors.border}`,
-              boxShadow: `0 0 30px ${sentimentColors.glow}60, 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)`,
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-              filter: 'contrast(1.2) brightness(1.1)',
-              backdropFilter: 'blur(15px)'
-            }}
+              whileTap={{ 
+                scale: 0.95,
+                rotateY: 1,
+                transition: { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }
+              }}
+              className="relative px-8 py-4 rounded-xl text-base font-black flex items-center gap-3 overflow-hidden group/btn pointer-events-auto cursor-pointer"
+              style={{
+                background: `linear-gradient(135deg, ${sentimentColors.bg}90, ${sentimentColors.bg}60)`,
+                color: sentimentColors.text,
+                border: `3px solid ${sentimentColors.border}`,
+                boxShadow: `0 0 30px ${sentimentColors.glow}60, 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)`,
+                transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                filter: 'contrast(1.2) brightness(1.1)',
+                backdropFilter: 'blur(15px)',
+                transformStyle: 'preserve-3d',
+                perspective: '1000px'
+              }}
             >
               <motion.div
                 className="absolute inset-0 opacity-0 group-hover/btn:opacity-100"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isHovered ? 1 : 0 }}
+                transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
                 style={{
-                  background: `radial-gradient(circle at center, ${sentimentColors.glow}30 0%, transparent 70%)`,
-                  transition: 'opacity 0.4s ease'
+                  background: `radial-gradient(circle at center, ${sentimentColors.glow}40 0%, transparent 70%)`,
                 }}
               />
-              <span className="relative z-10 text-xl">💬</span>
+              <motion.span 
+                className="relative z-10 text-xl"
+                whileHover={{ rotate: 15, scale: 1.1 }}
+                transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                💬
+              </motion.span>
               <span className="relative z-10">Comment</span>
             </motion.button>
           </div>
