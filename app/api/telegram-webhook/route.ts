@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+interface TelegramPhoto {
+  file_id: string
+  file_unique_id: string
+  file_size: number
+  width: number
+  height: number
+}
+
 interface TelegramMessage {
   message?: {
     text?: string
     caption?: string
-    photo?: Array<{ file_path: string }>
+    photo?: TelegramPhoto[]
     chat?: {
       id: number
       type: string
@@ -14,7 +22,7 @@ interface TelegramMessage {
   channel_post?: {
     text?: string
     caption?: string
-    photo?: Array<{ file_path: string }>
+    photo?: TelegramPhoto[]
     chat?: {
       id: number
       type: string
@@ -100,8 +108,23 @@ export async function POST(request: NextRequest) {
     // Get image URL if photo exists
     let imageUrl = null
     if (message.photo && message.photo.length > 0) {
-      const photo = message.photo[message.photo.length - 1]
-      imageUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`
+      try {
+        // Get the highest resolution photo (last one in array)
+        const photo = message.photo[message.photo.length - 1]
+        
+        // First, get the file path from Telegram
+        const fileResponse = await fetch(
+          `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getFile?file_id=${photo.file_id}`
+        )
+        const fileData = await fileResponse.json()
+        
+        if (fileData.ok && fileData.result.file_path) {
+          imageUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${fileData.result.file_path}`
+          console.log(`📸 Image URL: ${imageUrl}`)
+        }
+      } catch (imgError) {
+        console.error('Error fetching image:', imgError)
+      }
     }
 
     // Create article in database (NO ADMIN NEEDED!)

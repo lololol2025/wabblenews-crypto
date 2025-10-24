@@ -26,6 +26,20 @@ export default function NewsCard({ article, index }: NewsCardProps) {
   const timeAgo = formatDistanceToNow(new Date(article.createdAt), { addSuffix: true })
   const [isHovered, setIsHovered] = useState(false)
   
+  // Get user's timezone and format exact time
+  const articleDate = new Date(article.createdAt)
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const exactTime = articleDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: userTimezone
+  })
+  const timezoneAbbr = articleDate.toLocaleTimeString('en-US', {
+    timeZoneName: 'short',
+    timeZone: userTimezone
+  }).split(' ').pop()
+  
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   
@@ -166,7 +180,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         
         <div className="p-6">
           <motion.h2
-            className="text-2xl font-black mb-4 line-clamp-3 leading-tight tracking-tight"
+            className="text-xl font-black mb-3 leading-tight tracking-tight"
             animate={{
               color: isHovered ? sentimentColors.text : '#FFFFFF'
             }}
@@ -175,7 +189,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             {article.title}
           </motion.h2>
           
-          <p className="text-gray-400 mb-6 line-clamp-5 text-base leading-relaxed font-light">
+          <p className="text-gray-400 mb-5 text-sm leading-relaxed font-light whitespace-pre-wrap">
             {article.content}
           </p>
           
@@ -205,9 +219,26 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 <div className="text-gray-500 text-xs font-medium">Author</div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-gray-400 font-semibold text-sm">{timeAgo}</div>
-              <div className="text-gray-600 text-xs">{article.category}</div>
+            <div className="flex items-center gap-3">
+              <Link href={`/article/${article.id}#comments`}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-200"
+                  style={{
+                    backgroundColor: sentimentColors.bg,
+                    color: sentimentColors.text,
+                    border: `1px solid ${sentimentColors.border}50`
+                  }}
+                >
+                  <span>💬</span>
+                  <span>Comment</span>
+                </motion.button>
+              </Link>
+              <div className="text-right">
+                <div className="text-gray-300 font-bold text-sm">{timeAgo}</div>
+                <div className="text-gray-500 text-xs">{exactTime} {timezoneAbbr}</div>
+              </div>
             </div>
           </div>
         </div>
