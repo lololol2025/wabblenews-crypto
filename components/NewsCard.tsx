@@ -116,22 +116,6 @@ export default function NewsCard({ article, index }: NewsCardProps) {
 
   return (
     <div className="relative">
-      {/* Always-visible sentiment label above card */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        className="absolute -top-3 left-4 z-20 px-3 py-1 rounded-full text-xs font-black backdrop-blur-md"
-        style={{
-          backgroundColor: sentimentColors.bg,
-          color: sentimentColors.text,
-          border: `1.5px solid ${sentimentColors.border}`,
-          boxShadow: `0 0 20px ${sentimentColors.glow}`
-        }}
-      >
-        {sentimentColors.label}
-      </motion.div>
-
       <motion.article
         initial={{ opacity: 0, y: 60, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -177,18 +161,42 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           </div>
         )}
         
-        <div className="p-6">
-          <motion.h2
-            className="text-xl font-black mb-3 leading-tight tracking-tight"
-            animate={{
-              color: isHovered ? sentimentColors.text : '#FFFFFF'
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            {article.title}
-          </motion.h2>
+        <div className="p-6 flex flex-col h-[280px]">
+          {/* Sentiment tag inline with text */}
+          <div className="flex items-start gap-3 mb-4">
+            <span 
+              className="px-3 py-1 rounded-full text-xs font-black whitespace-nowrap flex-shrink-0"
+              style={{
+                backgroundColor: sentimentColors.bg,
+                color: sentimentColors.text,
+                border: `1.5px solid ${sentimentColors.border}`,
+              }}
+            >
+              {sentimentColors.label}
+            </span>
+            <motion.h2
+              className="font-black leading-tight tracking-tight flex-1"
+              style={{ 
+                fontSize: article.title.length > 60 ? '0.9rem' : '1.1rem',
+                fontFamily: 'Montserrat, sans-serif'
+              }}
+              animate={{
+                color: isHovered ? sentimentColors.text : '#FFFFFF'
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              {article.title}
+            </motion.h2>
+          </div>
           
-          <p className="text-gray-400 mb-5 text-sm leading-relaxed font-light whitespace-pre-wrap">
+          <p 
+            className="text-gray-400 leading-relaxed font-light whitespace-pre-wrap flex-1 overflow-hidden"
+            style={{ 
+              fontSize: article.content.length > 200 ? '0.75rem' : article.content.length > 100 ? '0.85rem' : '0.9rem',
+              fontFamily: 'Montserrat, sans-serif',
+              lineHeight: '1.6'
+            }}
+          >
             {article.content}
           </p>
           
