@@ -97,6 +97,9 @@ export default function NewsCard({ article, index }: NewsCardProps) {
 
   const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'low')
 
+  // Add advanced hover state management
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     const width = rect.width
@@ -105,25 +108,22 @@ export default function NewsCard({ article, index }: NewsCardProps) {
     const mouseY = e.clientY - rect.top
     const xPct = mouseX / width - 0.5
     const yPct = mouseY / height - 0.5
+    
+    // Update 3D tilt values
     x.set(xPct)
     y.set(yPct)
+    
+    // Update mouse position for advanced effects
+    setMousePosition({
+      x: mouseX,
+      y: mouseY
+    })
   }
 
   const handleMouseLeave = () => {
     x.set(0)
     y.set(0)
     setIsHovered(false)
-  }
-
-  // Add advanced hover state management
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    })
   }
 
   return (
