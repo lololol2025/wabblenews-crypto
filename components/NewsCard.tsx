@@ -211,11 +211,13 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           {/* Sentiment tag inline with text */}
           <div className="flex items-start gap-3 mb-4">
             <span 
-              className="px-3 py-1 rounded-full text-xs font-black whitespace-nowrap flex-shrink-0"
+              className="px-3 py-1.5 rounded-full text-xs font-black whitespace-nowrap flex-shrink-0"
               style={{
                 backgroundColor: sentimentColors.bg,
                 color: sentimentColors.text,
-                border: `1.5px solid ${sentimentColors.border}`,
+                border: `2px solid ${sentimentColors.border}`,
+                boxShadow: `0 0 15px ${sentimentColors.glow}`,
+                fontWeight: 800
               }}
             >
               {sentimentColors.label}
@@ -223,8 +225,9 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             <h2
               className="font-black leading-tight tracking-tight flex-1 text-white"
               style={{ 
-                fontSize: article.title.length > 60 ? '0.95rem' : '1.15rem',
-                fontWeight: 700
+                fontSize: article.title.length > 80 ? '1rem' : article.title.length > 50 ? '1.1rem' : '1.25rem',
+                fontWeight: 800,
+                letterSpacing: '-0.02em'
               }}
             >
               {article.title}
@@ -232,11 +235,12 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           </div>
           
           <p 
-            className="text-gray-200 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
+            className="text-gray-100 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
             style={{ 
-              fontSize: article.content.length > 200 ? '0.8rem' : article.content.length > 100 ? '0.9rem' : '0.95rem',
-              fontWeight: 700,
-              lineHeight: '1.7'
+              fontSize: article.content.length > 250 ? '0.85rem' : article.content.length > 150 ? '0.95rem' : '1.05rem',
+              fontWeight: 600,
+              lineHeight: '1.6',
+              letterSpacing: '0.01em'
             }}
           >
             {article.content}
