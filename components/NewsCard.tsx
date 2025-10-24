@@ -142,15 +142,14 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.015, y: -4 }}
         className="glass-effect rounded-2xl overflow-hidden group relative"
         style={{
-          border: `2px solid ${sentimentColors.border}${isHovered ? '80' : '30'}`,
+          border: `2px solid ${sentimentColors.border}${isHovered ? 'FF' : '60'}`,
           boxShadow: isHovered
-            ? `0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px ${sentimentColors.glow}`
-            : '0 20px 40px rgba(0, 0, 0, 0.6)',
-          transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            ? `0 25px 70px rgba(0, 0, 0, 0.9), 0 0 60px ${sentimentColors.glow}, 0 0 120px ${sentimentColors.glow}40`
+            : `0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px ${sentimentColors.glow}40`,
+          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
         }}
       >
       <Link href={`/article/${article.id}`} className="block relative">
@@ -193,53 +192,38 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             {article.content}
           </p>
           
-          <div className="flex items-center justify-between pt-4 border-t border-gray-800/50">
-            <div className="flex items-center space-x-3">
-              <motion.div 
-                animate={{
-                  scale: isHovered ? 1.1 : 1
+          <div className="flex items-center justify-between pt-4 border-t border-gray-800/30">
+            <div className="text-left">
+              <div className="text-gray-300 font-bold text-sm">{timeAgo}</div>
+              <div className="text-gray-500 text-xs">{exactTime} {timezoneAbbr}</div>
+            </div>
+            
+            <Link href={`/article/${article.id}#comments`}>
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: `0 0 30px ${sentimentColors.glow}, 0 0 60px ${sentimentColors.glow}40`
                 }}
-                transition={{
-                  duration: 0.3,
-                  ease: 'easeOut'
-                }}
-                className="w-12 h-12 rounded-full flex items-center justify-center text-base font-black"
+                className="relative px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 overflow-hidden group/btn"
                 style={{
-                  backgroundColor: sentimentColors.bg,
-                  borderColor: sentimentColors.border,
-                  borderWidth: '2px',
+                  background: `linear-gradient(135deg, ${sentimentColors.bg}80, ${sentimentColors.bg}40)`,
                   color: sentimentColors.text,
-                  boxShadow: `0 0 20px ${sentimentColors.glow}`
+                  border: `2px solid ${sentimentColors.border}`,
+                  boxShadow: `0 0 20px ${sentimentColors.glow}40, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
                 }}
               >
-                {article.author.name.charAt(0)}
-              </motion.div>
-              <div>
-                <div className="font-bold text-white text-sm">{article.author.name}</div>
-                <div className="text-gray-500 text-xs font-medium">Author</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link href={`/article/${article.id}#comments`}>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-200"
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover/btn:opacity-100"
                   style={{
-                    backgroundColor: sentimentColors.bg,
-                    color: sentimentColors.text,
-                    border: `1px solid ${sentimentColors.border}50`
+                    background: `radial-gradient(circle at center, ${sentimentColors.glow}30 0%, transparent 70%)`,
+                    transition: 'opacity 0.4s ease'
                   }}
-                >
-                  <span>💬</span>
-                  <span>Comment</span>
-                </motion.button>
-              </Link>
-              <div className="text-right">
-                <div className="text-gray-300 font-bold text-sm">{timeAgo}</div>
-                <div className="text-gray-500 text-xs">{exactTime} {timezoneAbbr}</div>
-              </div>
-            </div>
+                />
+                <span className="relative z-10 text-lg">💬</span>
+                <span className="relative z-10">Comment</span>
+              </motion.button>
+            </Link>
           </div>
         </div>
       </Link>

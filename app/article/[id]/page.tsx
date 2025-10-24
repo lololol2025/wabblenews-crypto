@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
 import { motion } from 'framer-motion'
 import { formatDistanceToNow } from 'date-fns'
+import toast from 'react-hot-toast'
 
 interface Article {
   id: string
@@ -22,15 +23,34 @@ interface Article {
   }
 }
 
+interface Comment {
+  id: string
+  content: string
+  author: string
+  createdAt: string
+}
+
 export default function ArticlePage() {
   const params = useParams()
+  const router = useRouter()
   const [article, setArticle] = useState<Article | null>(null)
+  const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [commentText, setCommentText] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     fetchArticle()
+    checkAuth()
   }, [params.id])
+
+  const checkAuth = async () => {
+    // Check if user is logged in (you can implement proper auth later)
+    const username = localStorage.getItem('username')
+    setIsLoggedIn(!!username)
+  }
 
   const fetchArticle = async () => {
     try {
@@ -48,6 +68,36 @@ export default function ArticlePage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!isLoggedIn) {
+      toast.error('Please sign up to comment!')
+      router.push('/signup')
+      return
+    }
+
+    if (!commentText.trim()) {
+      toast.error('Please enter a comment')
+      return
+    }
+
+    setSubmitting(true)
+    
+    // Simulate comment submission (implement real API later)
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      content: commentText,
+      author: localStorage.getItem('username') || 'Anonymous',
+      createdAt: new Date().toISOString()
+    }
+
+    setComments([...comments, newComment])
+    setCommentText('')
+    toast.success('Comment posted!')
+    setSubmitting(false)
   }
 
   const getSentimentBorder = (sentiment?: string) => {
@@ -186,6 +236,82 @@ export default function ArticlePage() {
           >
             <div className="text-gray-400 leading-loose whitespace-pre-wrap text-2xl font-light" style={{ lineHeight: '2.0' }}>
               {article.content}
+            </div>
+          </motion.div>
+
+          {/* Comments Section */}
+          <motion.div
+            id="comments"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="mt-16 pt-12 border-t border-gray-800/50"
+          >
+            <h2 className="text-4xl font-black text-white mb-8">Comments</h2>
+
+            {!isLoggedIn && (
+              <div className="mb-8 p-6 glass-effect border border-primary/30 rounded-2xl">
+                <p className="text-gray-300 mb-4 text-lg">
+                  Want to join the discussion?{' '}
+                  <Link href="/signup" className="text-primary hover:text-primary/80 font-bold underline">
+                    Sign up
+                  </Link>
+                  {' '}to leave a comment!
+                </p>
+              </div>
+            )}
+
+            {isLoggedIn && (
+              <form onSubmit={handleCommentSubmit} className="mb-12">
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Share your thoughts..."
+                  className="w-full p-6 bg-black/40 border-2 border-gray-700 focus:border-primary rounded-2xl text-white text-lg resize-none transition-all duration-300 focus:outline-none"
+                  rows={4}
+                />
+                <motion.button
+                  type="submit"
+                  disabled={submitting || !commentText.trim()}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="mt-4 px-8 py-4 bg-primary text-black font-black text-lg rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-all"
+                >
+                  {submitting ? 'Posting...' : 'Post Comment'}
+                </motion.button>
+              </form>
+            )}
+
+            <div className="space-y-6">
+              {comments.length === 0 && (
+                <p className="text-gray-500 text-center py-12 text-lg">
+                  No comments yet. Be the first to share your thoughts!
+                </p>
+              )}
+              
+              {comments.map((comment) => (
+                <motion.div
+                  key={comment.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="glass-effect p-6 rounded-2xl border border-gray-800"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center text-primary font-black text-lg flex-shrink-0">
+                      {comment.author.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-bold text-white text-lg">{comment.author}</span>
+                        <span className="text-gray-500 text-sm">
+                          {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                        </span>
+                      </div>
+                      <p className="text-gray-300 text-base leading-relaxed">{comment.content}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </motion.div>
