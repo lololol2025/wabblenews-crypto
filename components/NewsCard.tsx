@@ -128,13 +128,15 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
         className="glass-effect rounded-2xl overflow-hidden group relative"
-        style={{
-          border: `2px solid ${sentimentColors.border}${isHovered ? 'FF' : '60'}`,
-          boxShadow: isHovered
-            ? `0 25px 70px rgba(0, 0, 0, 0.9), 0 0 60px ${sentimentColors.glow}, 0 0 120px ${sentimentColors.glow}40`
-            : `0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px ${sentimentColors.glow}40`,
-          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
-        }}
+            style={{
+              border: `3px solid ${sentimentColors.border}${isHovered ? 'FF' : '80'}`,
+              boxShadow: isHovered
+                ? `0 30px 80px rgba(0, 0, 0, 0.95), 0 0 80px ${sentimentColors.glow}, 0 0 150px ${sentimentColors.glow}50, inset 0 1px 0 rgba(255,255,255,0.1)`
+                : `0 25px 50px rgba(0, 0, 0, 0.8), 0 0 40px ${sentimentColors.glow}60, inset 0 1px 0 rgba(255,255,255,0.05)`,
+              transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              backdropFilter: 'blur(20px)',
+              filter: 'contrast(1.1) brightness(1.05)'
+            }}
       >
       <Link href={`/article/${article.id}`} className="block relative pointer-events-none">
         {article.images && article.images.length > 0 && (
@@ -211,13 +213,16 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           {/* Sentiment tag inline with text */}
           <div className="flex items-start gap-3 mb-4">
             <span 
-              className="px-3 py-1.5 rounded-full text-xs font-black whitespace-nowrap flex-shrink-0"
+              className="px-4 py-2 rounded-full text-sm font-black whitespace-nowrap flex-shrink-0"
               style={{
                 backgroundColor: sentimentColors.bg,
                 color: sentimentColors.text,
-                border: `2px solid ${sentimentColors.border}`,
-                boxShadow: `0 0 15px ${sentimentColors.glow}`,
-                fontWeight: 800
+                border: `3px solid ${sentimentColors.border}`,
+                boxShadow: `0 0 25px ${sentimentColors.glow}, 0 4px 15px rgba(0,0,0,0.3)`,
+                fontWeight: 900,
+                textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                filter: 'contrast(1.2) brightness(1.1)',
+                backdropFilter: 'blur(10px)'
               }}
             >
               {sentimentColors.label}
@@ -225,9 +230,11 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             <h2
               className="font-black leading-tight tracking-tight flex-1 text-white"
               style={{ 
-                fontSize: article.title.length > 80 ? '1rem' : article.title.length > 50 ? '1.1rem' : '1.25rem',
-                fontWeight: 800,
-                letterSpacing: '-0.02em'
+                fontSize: article.title.length > 80 ? '1.1rem' : article.title.length > 50 ? '1.3rem' : '1.5rem',
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                textShadow: '0 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.1)',
+                filter: 'contrast(1.2) brightness(1.1)'
               }}
             >
               {article.title}
@@ -235,12 +242,14 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           </div>
           
           <p 
-            className="text-gray-100 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
+            className="text-gray-50 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
             style={{ 
-              fontSize: article.content.length > 250 ? '0.85rem' : article.content.length > 150 ? '0.95rem' : '1.05rem',
-              fontWeight: 600,
-              lineHeight: '1.6',
-              letterSpacing: '0.01em'
+              fontSize: article.content.length > 250 ? '0.95rem' : article.content.length > 150 ? '1.1rem' : '1.2rem',
+              fontWeight: 700,
+              lineHeight: '1.7',
+              letterSpacing: '0.02em',
+              textShadow: '0 1px 4px rgba(0,0,0,0.6), 0 0 10px rgba(255,255,255,0.05)',
+              filter: 'contrast(1.15) brightness(1.05)'
             }}
           >
             {article.content}
@@ -248,8 +257,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           
           <div className="flex items-center justify-between pt-4 border-t border-gray-800/30">
             <div className="text-left">
-              <div className="text-gray-300 font-bold text-sm">{timeAgo}</div>
-              <div className="text-gray-500 text-xs">{exactTime} {timezoneAbbr}</div>
+              <div className="text-gray-200 font-black text-sm" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8)', filter: 'contrast(1.2)' }}>{timeAgo}</div>
+              <div className="text-gray-400 text-xs font-bold" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}>{exactTime} {timezoneAbbr}</div>
             </div>
             
             <motion.button
@@ -262,14 +271,17 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 scale: 1.05,
                 boxShadow: `0 0 30px ${sentimentColors.glow}, 0 0 60px ${sentimentColors.glow}40`
               }}
-              className="relative px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 overflow-hidden group/btn pointer-events-auto cursor-pointer"
-              style={{
-                background: `linear-gradient(135deg, ${sentimentColors.bg}80, ${sentimentColors.bg}40)`,
-                color: sentimentColors.text,
-                border: `2px solid ${sentimentColors.border}`,
-                boxShadow: `0 0 20px ${sentimentColors.glow}40, inset 0 1px 0 rgba(255,255,255,0.1)`,
-                transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
-              }}
+            className="relative px-8 py-4 rounded-xl text-base font-black flex items-center gap-3 overflow-hidden group/btn pointer-events-auto cursor-pointer"
+            style={{
+              background: `linear-gradient(135deg, ${sentimentColors.bg}90, ${sentimentColors.bg}60)`,
+              color: sentimentColors.text,
+              border: `3px solid ${sentimentColors.border}`,
+              boxShadow: `0 0 30px ${sentimentColors.glow}60, 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)`,
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+              filter: 'contrast(1.2) brightness(1.1)',
+              backdropFilter: 'blur(15px)'
+            }}
             >
               <motion.div
                 className="absolute inset-0 opacity-0 group-hover/btn:opacity-100"
@@ -278,7 +290,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   transition: 'opacity 0.4s ease'
                 }}
               />
-              <span className="relative z-10 text-lg">💬</span>
+              <span className="relative z-10 text-xl">💬</span>
               <span className="relative z-10">Comment</span>
             </motion.button>
           </div>
