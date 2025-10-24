@@ -126,7 +126,6 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleMouseLeave}
-        whileHover={{ scale: 1.015, y: -4 }}
         className="glass-effect rounded-2xl overflow-hidden group relative"
         style={{
           border: `2px solid ${sentimentColors.border}${isHovered ? 'FF' : '60'}`,
@@ -136,27 +135,18 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
         }}
       >
-      <Link href={`/article/${article.id}`} className="block relative">
+      <Link href={`/article/${article.id}`} className="block relative pointer-events-none">
         {article.imageUrl && (
-          <div className="relative h-64 overflow-hidden bg-black">
-            <motion.img
-              src={article.imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover"
-              animate={{
-                scale: isHovered ? 1.08 : 1,
-              }}
-              transition={{
-                duration: 0.6,
-                ease: [0.16, 1, 0.3, 1]
-              }}
+          <div className="flex gap-2 p-4 pb-0">
+            <img
+              src="/images/canary.jpg"
+              alt="Canary Capital"
+              className="w-16 h-16 object-contain rounded-lg bg-white/5 p-2"
             />
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"
-              animate={{
-                opacity: isHovered ? 0.7 : 0.9
-              }}
-              transition={{ duration: 0.4 }}
+            <img
+              src="/images/sui.jpg"
+              alt="Sui"
+              className="w-16 h-16 object-contain rounded-lg bg-white/5 p-2"
             />
           </div>
         )}
@@ -174,27 +164,23 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             >
               {sentimentColors.label}
             </span>
-            <motion.h2
-              className="font-black leading-tight tracking-tight flex-1"
+            <h2
+              className="font-black leading-tight tracking-tight flex-1 text-white"
               style={{ 
-                fontSize: article.title.length > 60 ? '0.9rem' : '1.1rem',
+                fontSize: article.title.length > 60 ? '0.95rem' : '1.15rem',
                 fontWeight: 700
               }}
-              animate={{
-                color: isHovered ? sentimentColors.text : '#FFFFFF'
-              }}
-              transition={{ duration: 0.3 }}
             >
               {article.title}
-            </motion.h2>
+            </h2>
           </div>
           
           <p 
-            className="text-gray-400 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
+            className="text-gray-200 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
             style={{ 
-              fontSize: article.content.length > 200 ? '0.75rem' : article.content.length > 100 ? '0.85rem' : '0.9rem',
-              fontWeight: 600,
-              lineHeight: '1.6'
+              fontSize: article.content.length > 200 ? '0.8rem' : article.content.length > 100 ? '0.9rem' : '0.95rem',
+              fontWeight: 700,
+              lineHeight: '1.7'
             }}
           >
             {article.content}
@@ -206,32 +192,35 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               <div className="text-gray-500 text-xs">{exactTime} {timezoneAbbr}</div>
             </div>
             
-            <Link href={`/article/${article.id}#comments`}>
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: `0 0 30px ${sentimentColors.glow}, 0 0 60px ${sentimentColors.glow}40`
-                }}
-                className="relative px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 overflow-hidden group/btn"
+            <motion.button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                window.location.href = `/article/${article.id}#comments`
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: `0 0 30px ${sentimentColors.glow}, 0 0 60px ${sentimentColors.glow}40`
+              }}
+              className="relative px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 overflow-hidden group/btn pointer-events-auto cursor-pointer"
+              style={{
+                background: `linear-gradient(135deg, ${sentimentColors.bg}80, ${sentimentColors.bg}40)`,
+                color: sentimentColors.text,
+                border: `2px solid ${sentimentColors.border}`,
+                boxShadow: `0 0 20px ${sentimentColors.glow}40, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 opacity-0 group-hover/btn:opacity-100"
                 style={{
-                  background: `linear-gradient(135deg, ${sentimentColors.bg}80, ${sentimentColors.bg}40)`,
-                  color: sentimentColors.text,
-                  border: `2px solid ${sentimentColors.border}`,
-                  boxShadow: `0 0 20px ${sentimentColors.glow}40, inset 0 1px 0 rgba(255,255,255,0.1)`,
-                  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                  background: `radial-gradient(circle at center, ${sentimentColors.glow}30 0%, transparent 70%)`,
+                  transition: 'opacity 0.4s ease'
                 }}
-              >
-                <motion.div
-                  className="absolute inset-0 opacity-0 group-hover/btn:opacity-100"
-                  style={{
-                    background: `radial-gradient(circle at center, ${sentimentColors.glow}30 0%, transparent 70%)`,
-                    transition: 'opacity 0.4s ease'
-                  }}
-                />
-                <span className="relative z-10 text-lg">💬</span>
-                <span className="relative z-10">Comment</span>
-              </motion.button>
-            </Link>
+              />
+              <span className="relative z-10 text-lg">💬</span>
+              <span className="relative z-10">Comment</span>
+            </motion.button>
           </div>
         </div>
       </Link>
