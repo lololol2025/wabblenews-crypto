@@ -81,7 +81,8 @@ export async function GET(request: NextRequest) {
           category: 'Breaking News',
           sentiment: 'positive',
           sentimentIntensity: 'high',
-          imageUrl: '/images/canary.jpg',
+          imageUrl: null,
+          images: ['/images/canary.jpg', '/images/sui.jpg'],
           createdAt: new Date().toISOString(),
           author: { name: 'WabbleNews AI' }
         },

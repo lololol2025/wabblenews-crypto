@@ -14,6 +14,7 @@ interface NewsCardProps {
     sentiment?: string
     sentimentIntensity?: string
     imageUrl: string | null
+    images?: string[]
     createdAt: string
     author: {
       name: string
@@ -136,18 +137,73 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         }}
       >
       <Link href={`/article/${article.id}`} className="block relative pointer-events-none">
-        {article.imageUrl && (
-          <div className="flex gap-2 p-4 pb-0">
-            <img
-              src="/images/canary.jpg"
-              alt="Canary Capital"
-              className="w-16 h-16 object-contain rounded-lg bg-white/5 p-2"
-            />
-            <img
-              src="/images/sui.jpg"
-              alt="Sui"
-              className="w-16 h-16 object-contain rounded-lg bg-white/5 p-2"
-            />
+        {article.images && article.images.length > 0 && (
+          <div className="w-full">
+            {article.images.length === 1 && (
+              <div className="w-full h-48 bg-black/20 overflow-hidden">
+                <img
+                  src={article.images[0]}
+                  alt="Post image"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            
+            {article.images.length === 2 && (
+              <div className="grid grid-cols-2 gap-1 h-40">
+                {article.images.map((img, i) => (
+                  <div key={i} className="bg-black/20 overflow-hidden">
+                    <img
+                      src={img}
+                      alt={`Post image ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {article.images.length === 3 && (
+              <div className="grid grid-cols-2 gap-1 h-40">
+                <div className="bg-black/20 overflow-hidden">
+                  <img
+                    src={article.images[0]}
+                    alt="Post image 1"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="grid grid-rows-2 gap-1">
+                  {article.images.slice(1).map((img, i) => (
+                    <div key={i} className="bg-black/20 overflow-hidden">
+                      <img
+                        src={img}
+                        alt={`Post image ${i + 2}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {article.images.length >= 4 && (
+              <div className="grid grid-cols-2 gap-1 h-40">
+                {article.images.slice(0, 4).map((img, i) => (
+                  <div key={i} className="bg-black/20 overflow-hidden relative">
+                    <img
+                      src={img}
+                      alt={`Post image ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    {i === 3 && article.images && article.images.length > 4 && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <span className="text-white text-2xl font-black">+{article.images.length - 4}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         
