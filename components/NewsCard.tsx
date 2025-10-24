@@ -178,7 +178,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               className="font-black leading-tight tracking-tight flex-1"
               style={{ 
                 fontSize: article.title.length > 60 ? '0.9rem' : '1.1rem',
-                fontFamily: 'Montserrat, sans-serif'
+                fontWeight: 700
               }}
               animate={{
                 color: isHovered ? sentimentColors.text : '#FFFFFF'
@@ -190,10 +190,10 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           </div>
           
           <p 
-            className="text-gray-400 leading-relaxed font-light whitespace-pre-wrap flex-1 overflow-hidden"
+            className="text-gray-400 leading-relaxed whitespace-pre-wrap flex-1 overflow-hidden"
             style={{ 
               fontSize: article.content.length > 200 ? '0.75rem' : article.content.length > 100 ? '0.85rem' : '0.9rem',
-              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: 600,
               lineHeight: '1.6'
             }}
           >

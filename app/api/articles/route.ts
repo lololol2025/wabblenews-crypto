@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
           category: 'Breaking News',
           sentiment: 'positive',
           sentimentIntensity: 'high',
-          imageUrl: 'https://pbs.twimg.com/profile_images/1727752967032639488/JTlXG-zN_400x400.jpg',
+          imageUrl: '/images/canary.jpg',
           createdAt: new Date().toISOString(),
           author: { name: 'WabbleNews AI' }
         },

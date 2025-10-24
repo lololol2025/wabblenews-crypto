@@ -46,10 +46,12 @@ export default function ArticlePage() {
     checkAuth()
   }, [params.id])
 
-  const checkAuth = async () => {
-    // Check if user is logged in (you can implement proper auth later)
-    const username = localStorage.getItem('username')
-    setIsLoggedIn(!!username)
+  const checkAuth = () => {
+    // Check if user is logged in (simple localStorage check)
+    if (typeof window !== 'undefined') {
+      const username = localStorage.getItem('username')
+      setIsLoggedIn(!!username)
+    }
   }
 
   const fetchArticle = async () => {
