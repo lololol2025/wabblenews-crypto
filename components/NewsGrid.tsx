@@ -19,10 +19,9 @@ interface Article {
 
 interface NewsGridProps {
   category?: string
-  timezone?: string
 }
 
-export default function NewsGrid({ category, timezone }: NewsGridProps) {
+export default function NewsGrid({ category }: NewsGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -90,28 +89,20 @@ export default function NewsGrid({ category, timezone }: NewsGridProps) {
   }
 
   return (
-    <div className="relative">
-      {/* Advanced Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-green-500/5 rounded-3xl blur-3xl" />
-      
-      <motion.div 
-        className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16"
-        initial={{ opacity: 0, y: 80 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ 
-          duration: 1.5,
-          delay: 1.0,
-          ease: [0.25, 0.46, 0.45, 0.94],
-          type: "spring",
-          stiffness: 100,
-          damping: 20
-        }}
-      >
-        {articles.map((article, index) => (
-          <NewsCard key={article.id} article={article} index={index} timezone={timezone} />
-        ))}
-      </motion.div>
-    </div>
+    <motion.div 
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
+      initial={{ opacity: 0, y: 60 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        duration: 1.0,
+        delay: 0.8,
+        ease: [0.16, 1, 0.3, 1]
+      }}
+    >
+      {articles.map((article, index) => (
+        <NewsCard key={article.id} article={article} index={index} />
+      ))}
+    </motion.div>
   )
 }
 
