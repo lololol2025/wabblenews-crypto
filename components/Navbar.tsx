@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import LanguageSelector from './LanguageSelector'
 import TimezoneSelector from './TimezoneSelector'
+import ThemeSelector from './ThemeSelector'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -86,10 +87,11 @@ export default function Navbar() {
               </motion.div>
             ))}
             
-            {/* Language & Timezone Selectors */}
+            {/* Language, Timezone & Theme Selectors */}
             <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-700">
               <LanguageSelector />
               <TimezoneSelector />
+              <ThemeSelector />
             </div>
           </div>
 

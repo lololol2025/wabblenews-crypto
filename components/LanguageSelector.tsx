@@ -1,46 +1,31 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { LanguageCode } from '@/lib/translations'
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'he', name: 'עברית', flag: '🇮🇱' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
-  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
-  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-  { code: 'sv', name: 'Svenska', flag: '🇸🇪' },
-  { code: 'no', name: 'Norsk', flag: '🇳🇴' },
-  { code: 'da', name: 'Dansk', flag: '🇩🇰' },
-  { code: 'fi', name: 'Suomi', flag: '🇫🇮' },
+  { code: 'en' as LanguageCode, name: 'English', flag: '🇬🇧' },
+  { code: 'es' as LanguageCode, name: 'Español', flag: '🇪🇸' },
+  { code: 'fr' as LanguageCode, name: 'Français', flag: '🇫🇷' },
+  { code: 'de' as LanguageCode, name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ru' as LanguageCode, name: 'Русский', flag: '🇷🇺' },
+  { code: 'ja' as LanguageCode, name: '日本語', flag: '🇯🇵' },
+  { code: 'ar' as LanguageCode, name: 'العربية', flag: '🇸🇦' },
+  { code: 'he' as LanguageCode, name: 'עברית', flag: '🇮🇱' },
+  { code: 'tr' as LanguageCode, name: 'Türkçe', flag: '🇹🇷' },
 ]
 
 export default function LanguageSelector() {
-  const [selected, setSelected] = useState('en')
+  const { language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved) setSelected(saved)
-  }, [])
-
-  const handleSelect = (code: string) => {
-    setSelected(code)
-    localStorage.setItem('language', code)
+  const handleSelect = (code: LanguageCode) => {
+    setLanguage(code)
     setIsOpen(false)
   }
 
-  const currentLang = languages.find(l => l.code === selected) || languages[0]
+  const currentLang = languages.find(l => l.code === language) || languages[0]
 
   return (
     <div className="relative">
@@ -82,7 +67,7 @@ export default function LanguageSelector() {
         <div 
           className="absolute top-full right-0 mt-2 rounded-lg overflow-hidden shadow-2xl z-50"
           style={{
-            background: 'rgba(20, 20, 20, 0.95)',
+            background: 'rgba(13, 13, 13, 0.98)',
             border: '1px solid rgba(0, 212, 255, 0.3)',
             backdropFilter: 'blur(20px)',
             maxHeight: '400px',
@@ -96,17 +81,17 @@ export default function LanguageSelector() {
               onClick={() => handleSelect(lang.code)}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all"
               style={{
-                background: selected === lang.code ? 'rgba(0, 212, 255, 0.2)' : 'transparent',
-                color: selected === lang.code ? '#00D4FF' : '#fff',
+                background: language === lang.code ? 'rgba(0, 212, 255, 0.2)' : 'transparent',
+                color: language === lang.code ? '#00D4FF' : '#fff',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
               }}
               onMouseEnter={(e) => {
-                if (selected !== lang.code) {
+                if (language !== lang.code) {
                   e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'
                 }
               }}
               onMouseLeave={(e) => {
-                if (selected !== lang.code) {
+                if (language !== lang.code) {
                   e.currentTarget.style.background = 'transparent'
                 }
               }}

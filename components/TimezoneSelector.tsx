@@ -3,34 +3,35 @@
 import { useState, useEffect } from 'react'
 
 const timezones = [
-  { value: 'UTC-12', label: 'UTC-12:00 (Baker Island)', offset: -12 },
-  { value: 'UTC-11', label: 'UTC-11:00 (American Samoa)', offset: -11 },
-  { value: 'UTC-10', label: 'UTC-10:00 (Hawaii)', offset: -10 },
-  { value: 'UTC-9', label: 'UTC-09:00 (Alaska)', offset: -9 },
-  { value: 'UTC-8', label: 'UTC-08:00 (PST - Los Angeles)', offset: -8 },
-  { value: 'UTC-7', label: 'UTC-07:00 (MST - Denver)', offset: -7 },
-  { value: 'UTC-6', label: 'UTC-06:00 (CST - Chicago)', offset: -6 },
-  { value: 'UTC-5', label: 'UTC-05:00 (EST - New York)', offset: -5 },
-  { value: 'UTC-4', label: 'UTC-04:00 (AST - Atlantic)', offset: -4 },
-  { value: 'UTC-3', label: 'UTC-03:00 (Buenos Aires)', offset: -3 },
-  { value: 'UTC-2', label: 'UTC-02:00 (Mid-Atlantic)', offset: -2 },
-  { value: 'UTC-1', label: 'UTC-01:00 (Azores)', offset: -1 },
-  { value: 'UTC+0', label: 'UTC+00:00 (London, GMT)', offset: 0 },
-  { value: 'UTC+1', label: 'UTC+01:00 (Paris, Berlin)', offset: 1 },
-  { value: 'UTC+2', label: 'UTC+02:00 (Cairo, Athens)', offset: 2 },
-  { value: 'UTC+3', label: 'UTC+03:00 (Moscow, Istanbul)', offset: 3 },
-  { value: 'UTC+4', label: 'UTC+04:00 (Dubai)', offset: 4 },
-  { value: 'UTC+5', label: 'UTC+05:00 (Karachi)', offset: 5 },
-  { value: 'UTC+5:30', label: 'UTC+05:30 (India)', offset: 5.5 },
-  { value: 'UTC+6', label: 'UTC+06:00 (Dhaka)', offset: 6 },
-  { value: 'UTC+7', label: 'UTC+07:00 (Bangkok)', offset: 7 },
-  { value: 'UTC+8', label: 'UTC+08:00 (Beijing, Singapore)', offset: 8 },
-  { value: 'UTC+9', label: 'UTC+09:00 (Tokyo, Seoul)', offset: 9 },
-  { value: 'UTC+10', label: 'UTC+10:00 (Sydney)', offset: 10 },
-  { value: 'UTC+11', label: 'UTC+11:00 (Solomon Islands)', offset: 11 },
-  { value: 'UTC+12', label: 'UTC+12:00 (Auckland)', offset: 12 },
-  { value: 'UTC+13', label: 'UTC+13:00 (Samoa)', offset: 13 },
-  { value: 'UTC+14', label: 'UTC+14:00 (Kiribati)', offset: 14 },
+  { value: 'UTC-12', label: 'UTC-12 (Baker Island)', offset: -12 },
+  { value: 'UTC-11', label: 'UTC-11 (American Samoa, Niue)', offset: -11 },
+  { value: 'UTC-10', label: 'UTC-10 (Hawaii, Tahiti)', offset: -10 },
+  { value: 'UTC-9', label: 'UTC-9 (Alaska)', offset: -9 },
+  { value: 'UTC-8', label: 'UTC-8 (Los Angeles, Vancouver, Mexico)', offset: -8 },
+  { value: 'UTC-7', label: 'UTC-7 (Denver, Phoenix, Calgary)', offset: -7 },
+  { value: 'UTC-6', label: 'UTC-6 (Chicago, Mexico City, Guatemala)', offset: -6 },
+  { value: 'UTC-5', label: 'UTC-5 (New York, Toronto, Lima)', offset: -5 },
+  { value: 'UTC-4', label: 'UTC-4 (Atlantic, Venezuela, Bolivia)', offset: -4 },
+  { value: 'UTC-3', label: 'UTC-3 (Buenos Aires, São Paulo, Santiago)', offset: -3 },
+  { value: 'UTC-2', label: 'UTC-2 (Mid-Atlantic, South Georgia)', offset: -2 },
+  { value: 'UTC-1', label: 'UTC-1 (Azores, Cape Verde)', offset: -1 },
+  { value: 'UTC+0', label: 'UTC+0 (London, Dublin, Lisbon, Ghana)', offset: 0 },
+  { value: 'UTC+1', label: 'UTC+1 (Germany, France, Italy, Spain)', offset: 1 },
+  { value: 'UTC+2', label: 'UTC+2 (Egypt, South Africa, Greece)', offset: 2 },
+  { value: 'UTC+3', label: 'UTC+3 (Turkey, Saudi Arabia, Russia, Kenya)', offset: 3 },
+  { value: 'UTC+4', label: 'UTC+4 (Dubai, Abu Dhabi, Armenia)', offset: 4 },
+  { value: 'UTC+5', label: 'UTC+5 (Pakistan, Uzbekistan)', offset: 5 },
+  { value: 'UTC+5:30', label: 'UTC+5:30 (India, Sri Lanka)', offset: 5.5 },
+  { value: 'UTC+6', label: 'UTC+6 (Bangladesh, Kazakhstan)', offset: 6 },
+  { value: 'UTC+7', label: 'UTC+7 (Thailand, Vietnam, Indonesia)', offset: 7 },
+  { value: 'UTC+8', label: 'UTC+8 (China, Singapore, Philippines)', offset: 8 },
+  { value: 'UTC+9', label: 'UTC+9 (Japan, South Korea)', offset: 9 },
+  { value: 'UTC+9:30', label: 'UTC+9:30 (Australia - Darwin)', offset: 9.5 },
+  { value: 'UTC+10', label: 'UTC+10 (Australia - Sydney, Papua New Guinea)', offset: 10 },
+  { value: 'UTC+11', label: 'UTC+11 (Solomon Islands, New Caledonia)', offset: 11 },
+  { value: 'UTC+12', label: 'UTC+12 (New Zealand, Fiji)', offset: 12 },
+  { value: 'UTC+13', label: 'UTC+13 (Samoa, Tonga)', offset: 13 },
+  { value: 'UTC+14', label: 'UTC+14 (Kiribati, Line Islands)', offset: 14 },
 ]
 
 export default function TimezoneSelector() {
@@ -99,12 +100,12 @@ export default function TimezoneSelector() {
         <div 
           className="absolute top-full right-0 mt-2 rounded-lg overflow-hidden shadow-2xl z-50"
           style={{
-            background: 'rgba(20, 20, 20, 0.95)',
+            background: 'rgba(13, 13, 13, 0.98)',
             border: '1px solid rgba(127, 255, 0, 0.3)',
             backdropFilter: 'blur(20px)',
             maxHeight: '400px',
             overflowY: 'auto',
-            width: '280px'
+            width: '340px'
           }}
         >
           {timezones.map((tz) => (

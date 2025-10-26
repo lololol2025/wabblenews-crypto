@@ -76,21 +76,29 @@ export default function NewsCard({ article, index }: NewsCardProps) {
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative rounded-xl overflow-hidden cursor-pointer"
+      className="relative rounded-xl overflow-visible"
       style={{
         width: '320px',
-        height: hasImage ? '420px' : '280px',
-        border: `2px solid ${sentimentColors.color}`,
-        transform: isHovered ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
-        boxShadow: isHovered 
-          ? `0 20px 50px rgba(0, 0, 0, 0.4), 0 0 60px ${sentimentColors.glow}, inset 0 0 80px ${sentimentColors.glow}`
-          : `0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px ${sentimentColors.glow}`,
-        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        backdropFilter: 'blur(10px)',
-        background: 'transparent'
+        height: hasImage ? '460px' : '320px',
       }}
     >
-      <Link href={`/article/${article.id}`} className="block h-full">
+      {/* Main Card Container */}
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          height: hasImage ? '420px' : '280px',
+          border: `2px solid ${sentimentColors.color}`,
+          transform: isHovered ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
+          boxShadow: isHovered 
+            ? `0 20px 50px rgba(0, 0, 0, 0.4), 0 0 60px ${sentimentColors.glow}, inset 0 0 80px ${sentimentColors.glow}`
+            : `0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px ${sentimentColors.glow}`,
+          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          backdropFilter: 'blur(10px)',
+          background: 'rgba(13, 13, 13, 0.8)',
+          cursor: 'pointer'
+        }}
+        onClick={() => window.location.href = `/article/${article.id}`}
+      >
         {/* Image Header - Only show if image exists */}
         {hasImage && (
           <div className="relative w-full h-[200px] overflow-hidden">
@@ -108,7 +116,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             />
             
             {/* Date in Image */}
-            <div className="absolute bottom-3 left-3">
+            <div className="absolute bottom-3 left-3 z-10">
               <span 
                 className="px-3 py-1.5 rounded-lg text-xs font-bold backdrop-blur-sm"
                 style={{
@@ -123,7 +131,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             </div>
 
             {/* Sentiment Chip */}
-            <div className="absolute top-3 right-3">
+            <div className="absolute top-3 right-3 z-10">
               <span 
                 className="px-3 py-1.5 rounded-full text-xs font-bold"
                 style={{
@@ -189,50 +197,58 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             {article.content}
           </p>
 
-          {/* Footer - Always visible View button */}
+          {/* Footer - Category tag only */}
           <div className="flex items-center justify-between gap-2">
             <span className="px-2 py-1 rounded bg-gray-800/50 text-xs text-gray-400">{article.category}</span>
-            
-            {/* Always Visible View Button */}
-            <button
-              className="px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-2"
-              style={{
-                background: `linear-gradient(135deg, ${sentimentColors.color}, ${sentimentColors.color}dd)`,
-                color: '#000',
-                boxShadow: `0 4px 12px ${sentimentColors.glow}`,
-                transition: 'all 0.25s ease-in-out',
-                transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-              }}
-            >
-              View
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
           </div>
         </div>
-      </Link>
+      </div>
 
-      {/* Comment Button - Under the card */}
-      <div className="absolute -bottom-12 left-0 right-0 flex justify-center">
+      {/* Buttons Row - OUTSIDE card, always clickable */}
+      <div className="flex gap-3 mt-3 px-2">
+        {/* View Button */}
         <Link 
-          href={`/article/${article.id}#comments`}
-          className="px-4 py-2 rounded-lg font-bold text-xs flex items-center gap-2 backdrop-blur-sm"
+          href={`/article/${article.id}`}
+          className="flex-1 px-4 py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300"
           style={{
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: '#fff',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            transition: 'all 0.25s ease-in-out'
+            background: `linear-gradient(135deg, ${sentimentColors.color}, ${sentimentColors.color}dd)`,
+            color: '#000',
+            boxShadow: `0 4px 12px ${sentimentColors.glow}`,
+            transform: 'scale(1)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.05)'
-            e.currentTarget.style.borderColor = sentimentColors.color
-            e.currentTarget.style.boxShadow = `0 4px 12px ${sentimentColors.glow}`
+            e.currentTarget.style.boxShadow = `0 6px 20px ${sentimentColors.glow}`
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+            e.currentTarget.style.boxShadow = `0 4px 12px ${sentimentColors.glow}`
+          }}
+        >
+          View
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+
+        {/* Comment Button */}
+        <Link 
+          href={`/article/${article.id}#comments`}
+          className="flex-1 px-4 py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 backdrop-blur-sm transition-all duration-300"
+          style={{
+            background: 'rgba(0, 0, 0, 0.8)',
+            color: '#fff',
+            border: `2px solid ${sentimentColors.color}`,
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.05)'
+            e.currentTarget.style.background = `${sentimentColors.color}22`
+            e.currentTarget.style.boxShadow = `0 6px 20px ${sentimentColors.glow}`
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)'
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
           }}
         >

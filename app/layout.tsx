@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
 import { Space_Grotesk, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 // Satoshi font for body text (using Inter as fallback since Satoshi requires local files)
@@ -33,8 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${satoshi.className} ${satoshi.variable} ${spaceGrotesk.variable}`}>
-        <Toaster position="top-right" />
-        {children}
+        <LanguageProvider>
+          <Toaster position="top-right" />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   )
