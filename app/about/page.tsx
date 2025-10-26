@@ -30,13 +30,18 @@ export default function AboutPage() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="flex justify-center"
             >
-              <div className="relative w-64 h-64 rounded-2xl overflow-hidden ring-4 ring-[var(--color-accent-primary)]/30 shadow-2xl">
+              <div className="relative w-64 h-64 rounded-2xl overflow-hidden ring-4 ring-[var(--color-accent-primary)]/30 shadow-2xl bg-gray-900 flex items-center justify-center">
                 <Image
                   src="/wabble-logo.jpg"
                   alt="Wabble Logo"
                   fill
+                  unoptimized
                   className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
                 />
+                <span className="text-6xl">📰</span>
               </div>
             </motion.div>
 

@@ -49,8 +49,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'normal')
   
-  // Get first image for header
-  const headerImage = article.images?.[0] || article.imageUrl || '/placeholder-news.jpg'
+  // Get first image for header or use data URL placeholder
+  const headerImage = article.images?.[0] || article.imageUrl || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Crect fill="%231a1d23" width="320" height="180"/%3E%3Ctext fill="rgba(255,255,255,0.5)" font-family="sans-serif" font-size="18" dy="10.5" font-weight="bold" x="50%25" y="50%25" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E'
 
   return (
     <motion.article
@@ -83,6 +83,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             src={headerImage}
             alt={article.title}
             fill
+            unoptimized
             className="object-cover"
             style={{
               filter: isHovered ? 'brightness(0.7)' : 'brightness(1)',
