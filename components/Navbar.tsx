@@ -4,6 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import LanguageSelector from './LanguageSelector'
+import TimezoneSelector from './TimezoneSelector'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -83,6 +85,12 @@ export default function Navbar() {
                 </Link>
               </motion.div>
             ))}
+            
+            {/* Language & Timezone Selectors */}
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-700">
+              <LanguageSelector />
+              <TimezoneSelector />
+            </div>
           </div>
 
           <button

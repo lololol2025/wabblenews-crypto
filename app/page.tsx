@@ -3,81 +3,71 @@
 import { useSearchParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import NewsGrid from '@/components/NewsGrid'
+import Hero from '@/components/Hero'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Suspense } from 'react'
 
 function HomeContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category') || undefined
-  const { scrollYProgress } = useScroll()
-  
-  const headerY = useTransform(scrollYProgress, [0, 0.3], [0, -100])
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 0.8, 0])
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen">
       <Navbar />
       <CryptoPriceTicker />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Hero Section */}
+      <Hero />
+
+      {/* Trending Articles Section */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="articles">
         <motion.div
-          style={{ y: headerY, opacity: headerOpacity }}
-          className="mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              duration: 1.0, 
-              ease: [0.19, 1.0, 0.22, 1.0]
-            }}
-          >
-            <motion.h1 
-              className="text-5xl md:text-7xl font-black text-white mb-8 leading-none tracking-tight"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.8, 
-                delay: 0.2,
-                ease: [0.19, 1.0, 0.22, 1.0]
-              }}
-              style={{
-                background: 'linear-gradient(180deg, #FFFFFF 0%, #AAAAAA 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Latest Crypto News
-            </motion.h1>
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: [0.19, 1.0, 0.22, 1.0] }}
-              className="h-1 w-32 bg-gradient-to-r from-primary via-primary/50 to-transparent mb-8 rounded-full"
-              style={{ 
-                transformOrigin: 'left',
-                boxShadow: '0 0 20px rgba(0, 212, 255, 0.8)' 
-              }}
-            />
-            <motion.p 
-              className="text-gray-500 text-lg md:text-xl font-light tracking-wide max-w-2xl leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.8, 
-                delay: 0.4,
-                ease: [0.19, 1.0, 0.22, 1.0]
-              }}
-            >
-              The fastest crypto and market news shared almost instantly. Real-time updates delivered straight from our sources. Stay ahead with <span style={{ color: '#00FF7F' }} className="font-bold">WabbleNews</span>.
-            </motion.p>
-          </motion.div>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
+              Trending Articles
+            </h2>
+            <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
+          </div>
         </motion.div>
 
-        <NewsGrid />
+        <NewsGrid category={category} />
       </main>
+
+      {/* Market Highlights Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl font-black text-white mb-8" style={{ fontFamily: 'var(--font-heading)' }}>
+            Market Highlights
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {['Bitcoin Surge', 'ETH Update', 'Market Trends'].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                className="glass-effect p-6 rounded-xl border border-gray-800 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300"
+              >
+                <h3 className="text-xl font-bold text-white mb-2">{item}</h3>
+                <p className="text-gray-400">Real-time market analysis and insights</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
 
       <footer className="glass-effect border-t border-gray-800 mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -97,4 +87,3 @@ export default function Home() {
     </Suspense>
   )
 }
-

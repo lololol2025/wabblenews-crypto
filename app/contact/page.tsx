@@ -21,97 +21,150 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen">
       <Navbar />
       <CryptoPriceTicker />
       
-      <main className="max-w-3xl mx-auto px-4 py-4">
+      <main className="max-w-7xl mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.5, 
-            ease: [0.4, 0, 0.2, 1]
-          }}
-          className="glass-effect rounded-xl p-6"
+          transition={{ duration: 0.6 }}
         >
-          {/* Compact Header with inline email */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-black text-white mb-2">Contact Us</h1>
-            <p className="text-primary font-bold">contact@wabblenews.com</p>
-          </div>
+          <h1 className="text-5xl font-black text-white text-center mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            Get in Touch
+          </h1>
+          <p className="text-gray-400 text-center mb-16 text-lg">
+            Have questions? We'd love to hear from you
+          </p>
 
-          {/* Compact Form */}
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-300 text-white text-sm"
-                  placeholder="Your name"
-                  required
-                />
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-300 text-white text-sm"
-                  placeholder="your@email.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <input
-                type="text"
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-300 text-white text-sm"
-                placeholder="What's this about?"
-                required
-              />
-            </div>
-
-            <div>
-              <textarea
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                rows={4}
-                className="w-full px-3 py-2 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-300 text-white text-sm resize-none"
-                placeholder="Tell us what's on your mind..."
-                required
-              />
-            </div>
-
-            <motion.button
-              type="submit"
-              whileTap={{ scale: 0.98 }}
-              whileHover={{ scale: 1.02 }}
-              className="relative w-full bg-primary text-black py-3 rounded-lg font-black hover:bg-primary/90 transition-all duration-300 text-base overflow-hidden group"
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Left: Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="glass-effect rounded-xl p-8 border border-gray-800"
             >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '100%' }}
-                transition={{ duration: 0.5 }}
-              />
-              <span className="relative z-10">Send Message</span>
-            </motion.button>
-          </form>
+              <h2 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+                Send us a message
+              </h2>
+              
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Name</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-all duration-300 text-white"
+                    placeholder="Your name"
+                    required
+                  />
+                </div>
 
-          {/* Quick contact options */}
-          <div className="mt-6 pt-6 border-t border-gray-800 text-center">
-            <p className="text-gray-400 text-sm">
-              For urgent matters, reach out on{' '}
-              <a href="#" className="text-primary hover:underline">Twitter</a> or{' '}
-              <a href="#" className="text-primary hover:underline">Telegram</a>
-            </p>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-all duration-300 text-white"
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Subject</label>
+                  <input
+                    type="text"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-all duration-300 text-white"
+                    placeholder="What's this about?"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Message</label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    rows={6}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-700 focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent transition-all duration-300 text-white resize-none"
+                    placeholder="Tell us what's on your mind..."
+                    required
+                  />
+                </div>
+
+                <motion.button
+                  type="submit"
+                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="btn-primary w-full text-base py-4"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    Send Message
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                </motion.button>
+              </form>
+            </motion.div>
+
+            {/* Right: Contact Info & Social */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="space-y-6"
+            >
+              {/* Email Card */}
+              <div className="glass-effect rounded-xl p-8 border border-gray-800">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-[var(--color-accent-primary)]/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[var(--color-accent-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Email</h3>
+                    <p className="text-[var(--color-accent-primary)] font-semibold">contact@wabblenews.com</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Telegram Card */}
+              <div className="glass-effect rounded-xl p-8 border border-gray-800">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Telegram</h3>
+                    <a href="https://t.me/jonathanjames0" target="_blank" rel="noopener noreferrer" className="text-blue-400 font-semibold hover:underline">
+                      @jonathanjames0
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Brand Image/Banner */}
+              <div className="glass-effect rounded-xl p-8 border border-gray-800 h-64 flex items-center justify-center bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-transparent">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">📰</div>
+                  <h3 className="text-2xl font-black text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                    WabbleNews
+                  </h3>
+                  <p className="text-gray-400">Real-time crypto insights</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </main>

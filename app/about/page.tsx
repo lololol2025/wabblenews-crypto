@@ -7,93 +7,131 @@ import Image from 'next/image'
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen">
       <Navbar />
       <CryptoPriceTicker />
       
-      <main className="max-w-4xl mx-auto px-4 py-4">
-        <motion.div
+      {/* Hero Banner */}
+      <section className="relative overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-transparent" />
+        
+        <div className="relative max-w-6xl mx-auto px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="grid md:grid-cols-2 gap-12 items-center"
+          >
+            {/* Left: Profile/Logo */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="flex justify-center"
+            >
+              <div className="relative w-64 h-64 rounded-2xl overflow-hidden ring-4 ring-[var(--color-accent-primary)]/30 shadow-2xl">
+                <Image
+                  src="/wabble-logo.jpg"
+                  alt="Wabble Logo"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </motion.div>
+
+            {/* Right: Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              <h1 className="text-5xl font-black text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+                About <span style={{ color: 'var(--color-accent-primary)' }}>WabbleNews</span>
+              </h1>
+              
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                Your premier source for real-time crypto news with AI-powered sentiment analysis. 
+                We deliver breaking news and market insights faster than anyone else.
+              </p>
+
+              <div className="space-y-3 mb-8">
+                {[
+                  { icon: '⚡', title: 'Lightning Fast', desc: 'Real-time updates delivered instantly' },
+                  { icon: '🎯', title: 'Accurate Analysis', desc: 'AI-powered sentiment tracking' },
+                  { icon: '🚀', title: 'Community Driven', desc: 'Powered by Crypto Wabble' }
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 + i * 0.1, duration: 0.4 }}
+                    className="flex items-start gap-3"
+                  >
+                    <span className="text-2xl">{item.icon}</span>
+                    <div>
+                      <h3 className="text-white font-bold">{item.title}</h3>
+                      <p className="text-gray-400 text-sm">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Social Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.4 }}
+                className="flex gap-4"
+              >
+                <a href="#" className="px-6 py-3 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-bold transition-all duration-300 hover:scale-105">
+                  Twitter
+                </a>
+                <a href="https://t.me/jonathanjames0" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-lg bg-[var(--color-accent-primary)]/20 hover:bg-[var(--color-accent-primary)]/30 text-[var(--color-accent-primary)] font-bold transition-all duration-300 hover:scale-105">
+                  Telegram
+                </a>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.5, 
-            ease: [0.4, 0, 0.2, 1]
-          }}
-          className="glass-effect rounded-xl p-6"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl font-black text-white mb-12 text-center"
+          style={{ fontFamily: 'var(--font-heading)' }}
         >
-          {/* Compact Hero Section */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/30">
-              <Image
-                src="/wabble-logo.jpg"
-                alt="Wabble Logo"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h1 className="text-3xl font-black text-white">
-              About <span style={{ color: '#00FF7F' }}>WabbleNews</span>
-            </h1>
-          </div>
-          
-          {/* One-line description */}
-          <p className="text-lg text-gray-300 mb-4 font-light">
-            Your premier source for real-time crypto news with AI-powered sentiment analysis.
-          </p>
-          
-          {/* Compact Values Grid */}
-          <div className="grid grid-cols-2 gap-3">
+          Our Values
+        </motion.h2>
+
+        <div className="grid md:grid-cols-4 gap-6">
+          {[
+            { title: 'Speed', icon: '⚡', desc: 'Breaking news delivered in real-time' },
+            { title: 'Accuracy', icon: '🎯', desc: 'Verified sources and fact-checking' },
+            { title: 'Innovation', icon: '🚀', desc: 'Ultra-modern platform with AI' },
+            { title: 'Community', icon: '💎', desc: 'Powered by Crypto Wabble' }
+          ].map((value, i) => (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="glass-effect rounded-lg p-4 border border-primary/20"
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className="glass-effect p-6 rounded-xl border border-gray-800 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300"
             >
-              <span className="text-primary text-xl font-black mb-1 block">↗</span>
-              <h3 className="text-white font-black text-sm mb-1">Speed</h3>
-              <p className="text-gray-400 text-xs leading-tight">Breaking news delivered in real-time</p>
+              <div className="text-4xl mb-3">{value.icon}</div>
+              <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                {value.title}
+              </h3>
+              <p className="text-gray-400 text-sm">{value.desc}</p>
             </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="glass-effect rounded-lg p-4 border border-primary/20"
-            >
-              <span className="text-primary text-xl font-black mb-1 block">↗</span>
-              <h3 className="text-white font-black text-sm mb-1">Accuracy</h3>
-              <p className="text-gray-400 text-xs leading-tight">Verified sources and fact-checking</p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="glass-effect rounded-lg p-4 border border-primary/20"
-            >
-              <span className="text-primary text-xl font-black mb-1 block">↗</span>
-              <h3 className="text-white font-black text-sm mb-1">Innovation</h3>
-              <p className="text-gray-400 text-xs leading-tight">Ultra-modern platform with AI</p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="glass-effect rounded-lg p-4 border border-primary/20"
-            >
-              <span className="text-green-400 text-xl font-black mb-1 block">↗</span>
-              <h3 className="text-white font-black text-sm mb-1">Community</h3>
-              <p className="text-gray-400 text-xs leading-tight">Powered by Crypto Wabble</p>
-            </motion.div>
-          </div>
-          
-          {/* Compact footer message */}
-          <p className="text-sm text-gray-400 mt-4 text-center">
-            Thank you for choosing <span style={{ color: '#00FF7F' }} className="font-black">WabbleNews</span> as your trusted crypto news source.
-          </p>
-        </motion.div>
-      </main>
+          ))}
+        </div>
+      </section>
 
       <footer className="glass-effect border-t border-gray-800 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6">

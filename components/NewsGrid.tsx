@@ -91,7 +91,7 @@ export default function NewsGrid({ category }: NewsGridProps) {
 
   return (
     <motion.div 
-      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center"
+      className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
@@ -99,9 +99,16 @@ export default function NewsGrid({ category }: NewsGridProps) {
         delay: 0.2,
         ease: [0.4, 0, 0.2, 1]
       }}
+      style={{
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch'
+      }}
     >
       {articles.map((article, index) => (
-        <NewsCard key={article.id} article={article} index={index} />
+        <div key={article.id} className="snap-start flex-shrink-0">
+          <NewsCard article={article} index={index} />
+        </div>
       ))}
     </motion.div>
   )

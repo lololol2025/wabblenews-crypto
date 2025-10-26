@@ -1,13 +1,23 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
-import { Montserrat } from 'next/font/google'
+import { Space_Grotesk, Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
-const montserrat = Montserrat({ 
+// Satoshi font for body text (using Inter as fallback since Satoshi requires local files)
+const satoshi = Inter({ 
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-montserrat',
+  variable: '--font-satoshi',
+})
+
+// Space Grotesk for headings
+const spaceGrotesk = Space_Grotesk({ 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
 })
 
 export const metadata: Metadata = {
@@ -22,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} ${montserrat.variable}`}>
+      <body className={`${satoshi.className} ${satoshi.variable} ${spaceGrotesk.variable}`}>
         <Toaster position="top-right" />
         {children}
       </body>
