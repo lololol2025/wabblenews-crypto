@@ -48,24 +48,37 @@ const getSentimentColors = (sentiment: string = 'neutral', intensity: string = '
 // Format date with timezone and relative time
 const formatCardDateTime = (dateString: string, timezoneOffset: number = 0) => {
   const date = new Date(dateString)
+  const now = new Date()
   
   // Apply timezone offset
   const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000)
   const adjustedDate = new Date(utcTime + (timezoneOffset * 3600000))
   
-  // Format: "2:00 PM"
-  const exactTime = format(adjustedDate, 'h:mm a')
+  // Check if older than 1 year
+  const yearDiff = now.getFullYear() - date.getFullYear()
+  const isOlderThanYear = yearDiff > 0 || 
+    (yearDiff === 0 && now.getMonth() < date.getMonth()) ||
+    (yearDiff === 0 && now.getMonth() === date.getMonth() && now.getDate() < date.getDate())
+  
+  let exactTime
+  if (isOlderThanYear || yearDiff >= 1) {
+    // Format: "2024 October 24, 2:00 PM"
+    exactTime = format(adjustedDate, 'yyyy MMMM dd, h:mm a')
+  } else {
+    // Format: "2:00 PM"
+    exactTime = format(adjustedDate, 'h:mm a')
+  }
   
   // Format: "3 hours ago"
   const relativeTime = formatDistanceToNow(date, { addSuffix: true })
   
-  return { exactTime, relativeTime }
+  return { exactTime, relativeTime, isOlderThanYear: isOlderThanYear || yearDiff >= 1 }
 }
 
 export default function NewsCard({ article, index }: NewsCardProps) {
   const { t } = useLanguage()
   const [isHovered, setIsHovered] = useState(false)
-  const [timeDisplay, setTimeDisplay] = useState({ exactTime: '', relativeTime: '' })
+  const [timeDisplay, setTimeDisplay] = useState({ exactTime: '', relativeTime: '', isOlderThanYear: false })
   const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'normal')
   
   // Get first image for header - if no image, don't show image area
@@ -151,16 +164,19 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             {/* Time in Image */}
             <div className="absolute bottom-3 left-3 z-10">
               <div 
-                className="px-3 py-1.5 rounded-lg text-xs font-bold backdrop-blur-sm"
+                className="px-3 py-2 rounded-lg font-bold backdrop-blur-sm"
                 style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
                   color: '#fff',
                   fontFamily: 'var(--font-heading)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  fontSize: timeDisplay.isOlderThanYear ? '10px' : '12px'
                 }}
               >
-                <div>{timeDisplay.exactTime}</div>
-                <div className="text-[10px] text-gray-400">{timeDisplay.relativeTime}</div>
+                <div className="leading-tight">{timeDisplay.exactTime}</div>
+                {!timeDisplay.isOlderThanYear && (
+                  <div className="text-[10px] text-gray-400 mt-1">{timeDisplay.relativeTime}</div>
+                )}
               </div>
             </div>
 
@@ -198,8 +214,10 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 {t(sentimentColors.label)}
               </span>
               <div className="text-xs text-gray-400 font-medium text-right">
-                <div>{timeDisplay.exactTime}</div>
-                <div className="text-[10px]">{timeDisplay.relativeTime}</div>
+                <div className={timeDisplay.isOlderThanYear ? 'text-[10px]' : ''}>{timeDisplay.exactTime}</div>
+                {!timeDisplay.isOlderThanYear && (
+                  <div className="text-[10px]">{timeDisplay.relativeTime}</div>
+                )}
               </div>
             </div>
           )}
