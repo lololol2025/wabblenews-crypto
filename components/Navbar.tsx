@@ -4,19 +4,21 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import TimezoneSelector from './TimezoneSelector'
 import ThemeSelector from './ThemeSelector'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { t } = useLanguage()
   
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Social Media', href: '/social' },
-    { name: 'Sign Up', href: '/signup' },
+    { name: t('home'), href: '/' },
+    { name: t('aboutUs'), href: '/about' },
+    { name: t('contact'), href: '/contact' },
+    { name: t('socialMedia'), href: '/social' },
+    { name: t('signUp'), href: '/signup' },
   ]
 
   return (

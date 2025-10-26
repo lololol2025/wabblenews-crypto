@@ -1,10 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface NewsCardProps {
   article: {
@@ -26,17 +27,17 @@ const getSentimentColors = (sentiment: string = 'neutral', intensity: string = '
   const colorMap: Record<string, any> = {
     'positive': {
       color: intensity === 'high' ? '#7FFF00' : '#00C853',
-      label: intensity === 'high' ? 'Very Bullish' : 'Bullish',
+      label: intensity === 'high' ? 'veryBullish' : 'bullish',
       glow: intensity === 'high' ? 'rgba(127, 255, 0, 0.5)' : 'rgba(0, 200, 83, 0.5)'
     },
     'neutral': {
       color: '#2196F3',
-      label: 'Neutral',
+      label: 'neutral',
       glow: 'rgba(33, 150, 243, 0.5)'
     },
     'negative': {
       color: intensity === 'high' ? '#B71C1C' : '#E53935',
-      label: intensity === 'high' ? 'Very Bearish' : 'Bearish',
+      label: intensity === 'high' ? 'veryBearish' : 'bearish',
       glow: intensity === 'high' ? 'rgba(183, 28, 28, 0.5)' : 'rgba(229, 57, 53, 0.5)'
     }
   }
@@ -44,26 +45,61 @@ const getSentimentColors = (sentiment: string = 'neutral', intensity: string = '
   return colorMap[sentiment] || colorMap['neutral']
 }
 
-// Format date: "October 24" or "2024 October 24" if older than a year
-const formatCardDate = (dateString: string) => {
+// Format date with timezone and relative time
+const formatCardDateTime = (dateString: string, timezoneOffset: number = 0) => {
   const date = new Date(dateString)
-  const now = new Date()
-  const yearDiff = now.getFullYear() - date.getFullYear()
   
-  if (yearDiff >= 1) {
-    return format(date, 'yyyy MMMM dd')
-  }
-  return format(date, 'MMMM dd')
+  // Apply timezone offset
+  const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000)
+  const adjustedDate = new Date(utcTime + (timezoneOffset * 3600000))
+  
+  // Format: "2:00 PM"
+  const exactTime = format(adjustedDate, 'h:mm a')
+  
+  // Format: "3 hours ago"
+  const relativeTime = formatDistanceToNow(date, { addSuffix: true })
+  
+  return { exactTime, relativeTime }
 }
 
 export default function NewsCard({ article, index }: NewsCardProps) {
-  const formattedDate = formatCardDate(article.createdAt)
+  const { t } = useLanguage()
   const [isHovered, setIsHovered] = useState(false)
+  const [timeDisplay, setTimeDisplay] = useState({ exactTime: '', relativeTime: '' })
   const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'normal')
   
   // Get first image for header - if no image, don't show image area
   const headerImage = article.images?.[0] || article.imageUrl
   const hasImage = !!headerImage
+
+  useEffect(() => {
+    // Get timezone from localStorage
+    const savedTimezone = localStorage.getItem('timezone') || 'UTC+0'
+    const offset = parseFloat(savedTimezone.replace('UTC', ''))
+    
+    setTimeDisplay(formatCardDateTime(article.createdAt, offset))
+    
+    // Update time every minute
+    const interval = setInterval(() => {
+      const currentTimezone = localStorage.getItem('timezone') || 'UTC+0'
+      const currentOffset = parseFloat(currentTimezone.replace('UTC', ''))
+      setTimeDisplay(formatCardDateTime(article.createdAt, currentOffset))
+    }, 60000)
+    
+    return () => clearInterval(interval)
+  }, [article.createdAt])
+
+  // Listen for timezone changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedTimezone = localStorage.getItem('timezone') || 'UTC+0'
+      const offset = parseFloat(savedTimezone.replace('UTC', ''))
+      setTimeDisplay(formatCardDateTime(article.createdAt, offset))
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [article.createdAt])
 
   return (
     <motion.article
@@ -115,9 +151,9 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               }}
             />
             
-            {/* Date in Image */}
+            {/* Time in Image */}
             <div className="absolute bottom-3 left-3 z-10">
-              <span 
+              <div 
                 className="px-3 py-1.5 rounded-lg text-xs font-bold backdrop-blur-sm"
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -126,8 +162,9 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   border: '1px solid rgba(255, 255, 255, 0.2)'
                 }}
               >
-                {formattedDate}
-              </span>
+                <div>{timeDisplay.exactTime}</div>
+                <div className="text-[10px] text-gray-400">{timeDisplay.relativeTime}</div>
+              </div>
             </div>
 
             {/* Sentiment Chip */}
@@ -141,7 +178,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   fontFamily: 'var(--font-heading)'
                 }}
               >
-                {sentimentColors.label}
+                {t(sentimentColors.label)}
               </span>
             </div>
           </div>
@@ -161,13 +198,16 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                   fontFamily: 'var(--font-heading)'
                 }}
               >
-                {sentimentColors.label}
+                {t(sentimentColors.label)}
               </span>
-              <span className="text-xs text-gray-400 font-medium">{formattedDate}</span>
+              <div className="text-xs text-gray-400 font-medium text-right">
+                <div>{timeDisplay.exactTime}</div>
+                <div className="text-[10px]">{timeDisplay.relativeTime}</div>
+              </div>
             </div>
           )}
 
-          {/* Title */}
+          {/* Title Only */}
           <h3
             className="font-bold text-white mb-2"
             style={{
@@ -175,27 +215,14 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               lineHeight: '1.4',
               fontFamily: 'var(--font-heading)',
               display: '-webkit-box',
-              WebkitLineClamp: 3,
+              WebkitLineClamp: hasImage ? 5 : 8,
               WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              flex: 1
             }}
           >
             {article.title}
           </h3>
-
-          {/* Excerpt */}
-          <p
-            className="text-gray-300 text-sm mb-4 flex-1"
-            style={{
-              display: '-webkit-box',
-              WebkitLineClamp: hasImage ? 3 : 5,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              lineHeight: '1.6'
-            }}
-          >
-            {article.content}
-          </p>
 
           {/* Footer - Category tag only */}
           <div className="flex items-center justify-between gap-2">
@@ -225,7 +252,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             e.currentTarget.style.boxShadow = `0 4px 12px ${sentimentColors.glow}`
           }}
         >
-          View
+          {t('view')}
           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -255,7 +282,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
           </svg>
-          Comments
+          {t('comments')}
         </Link>
       </div>
     </motion.article>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -8,6 +9,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('')
+  const { t } = useLanguage()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +36,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search posts by title, content, or category..."
+          placeholder={t('searchPlaceholder')}
           className="w-full pl-12 pr-24 py-4 rounded-xl text-white font-medium transition-all duration-300 focus:outline-none"
           style={{
             background: 'rgba(0, 0, 0, 0.5)',
@@ -92,7 +94,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 212, 255, 0.3)'
           }}
         >
-          Search
+          {t('search')}
         </button>
       </div>
     </form>

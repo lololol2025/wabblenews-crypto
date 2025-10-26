@@ -7,10 +7,12 @@ import Hero from '@/components/Hero'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
 import { motion } from 'framer-motion'
 import { Suspense } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 function HomeContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category') || undefined
+  const { t } = useLanguage()
 
   return (
     <div className="min-h-screen">
@@ -30,7 +32,7 @@ function HomeContent() {
         >
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-              Latest Posts
+              {t('latestPosts')}
             </h2>
             <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
           </div>

@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Hero() {
+  const { t } = useLanguage()
   return (
     <section className="relative h-[600px] w-full overflow-hidden">
       {/* Background with gradient overlay */}
@@ -36,7 +38,7 @@ export default function Hero() {
               backgroundClip: 'text'
             }}
           >
-            WabbleNews
+            {t('heroTitle')}
           </motion.h1>
 
           {/* Tagline */}
@@ -46,7 +48,7 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xl md:text-2xl text-gray-300 mb-8 font-light"
           >
-            Real-time crypto & market news with AI sentiment analysis
+            {t('heroTagline')}
           </motion.p>
 
           {/* CTA Button */}
@@ -61,7 +63,7 @@ export default function Hero() {
                 whileTap={{ scale: 0.95 }}
                 className="btn-primary text-lg px-8 py-4 inline-flex items-center gap-3"
               >
-                View Latest News
+                {t('viewLatestNews')}
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
