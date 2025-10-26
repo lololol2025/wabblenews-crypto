@@ -74,31 +74,28 @@ export default function NewsCard({ article, index }: NewsCardProps) {
 
   useEffect(() => {
     // Get timezone from localStorage
-    const savedTimezone = localStorage.getItem('timezone') || 'UTC+0'
-    const offset = parseFloat(savedTimezone.replace('UTC', ''))
-    
-    setTimeDisplay(formatCardDateTime(article.createdAt, offset))
-    
-    // Update time every minute
-    const interval = setInterval(() => {
-      const currentTimezone = localStorage.getItem('timezone') || 'UTC+0'
-      const currentOffset = parseFloat(currentTimezone.replace('UTC', ''))
-      setTimeDisplay(formatCardDateTime(article.createdAt, currentOffset))
-    }, 60000)
-    
-    return () => clearInterval(interval)
-  }, [article.createdAt])
-
-  // Listen for timezone changes
-  useEffect(() => {
-    const handleStorageChange = () => {
+    const updateTime = () => {
       const savedTimezone = localStorage.getItem('timezone') || 'UTC+0'
       const offset = parseFloat(savedTimezone.replace('UTC', ''))
       setTimeDisplay(formatCardDateTime(article.createdAt, offset))
     }
     
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    updateTime()
+    
+    // Update time every minute
+    const interval = setInterval(updateTime, 60000)
+    
+    // Listen for timezone changes
+    const handleTimezoneChange = () => {
+      updateTime()
+    }
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange)
+    
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('timezoneChanged', handleTimezoneChange)
+    }
   }, [article.createdAt])
 
   return (

@@ -153,16 +153,16 @@ export default function ContactPage() {
               {/* Brand Image/Banner */}
               <div className="glass-effect rounded-xl p-8 border border-gray-800 h-72 flex items-center justify-center bg-gradient-to-br from-blue-900/10 via-purple-900/10 to-transparent">
                 <div className="text-center">
-                  <div className="mb-4">
-                    <svg className="w-24 h-24 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#00C853"/>
-                    </svg>
-                  </div>
-                  <h3 className="text-3xl font-black text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <h3 className="text-4xl font-black text-white mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
                     WabbleNews
                   </h3>
-                  <p className="text-gray-300 font-medium">Real-time crypto & market news</p>
-                  <p className="text-gray-500 text-sm mt-2">AI-powered sentiment analysis</p>
+                  <p className="text-xl text-gray-300 font-bold mb-2">Real-time crypto & market news</p>
+                  <p className="text-gray-400 text-base">AI-powered sentiment analysis</p>
+                  <div className="mt-6 flex justify-center gap-4">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
                 </div>
               </div>
             </motion.div>

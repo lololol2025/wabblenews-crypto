@@ -54,6 +54,9 @@ export default function TimezoneSelector() {
     setSelected(value)
     localStorage.setItem('timezone', value)
     setIsOpen(false)
+    
+    // Trigger custom event for all components to update
+    window.dispatchEvent(new Event('timezoneChanged'))
   }
 
   const currentTz = timezones.find(tz => tz.value === selected) || timezones[12]
