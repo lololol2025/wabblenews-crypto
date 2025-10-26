@@ -246,6 +246,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 border: `3px solid ${sentimentColors.border}`,
                 boxShadow: `0 0 25px ${sentimentColors.glow}, 0 4px 15px rgba(0,0,0,0.3)`,
                 fontWeight: 900,
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                 textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                 filter: 'contrast(1.2) brightness(1.1)',
                 backdropFilter: 'blur(10px)',
@@ -259,7 +260,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               style={{ 
                 fontSize: article.title.length > 80 ? '1.1rem' : article.title.length > 50 ? '1.3rem' : '1.5rem',
                 fontWeight: 900,
-                letterSpacing: '-0.03em',
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
+                letterSpacing: '-0.02em',
                 textShadow: '0 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.1)',
                 filter: 'contrast(1.2) brightness(1.1)'
               }}
@@ -273,8 +275,9 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             style={{ 
               fontSize: article.content.length > 250 ? '0.95rem' : article.content.length > 150 ? '1.1rem' : '1.2rem',
               fontWeight: 700,
+              fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
               lineHeight: '1.7',
-              letterSpacing: '0.02em',
+              letterSpacing: '0.01em',
               textShadow: '0 1px 4px rgba(0,0,0,0.6), 0 0 10px rgba(255,255,255,0.05)',
               filter: 'contrast(1.15) brightness(1.05)'
             }}
@@ -284,8 +287,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           
           <div className="flex items-center justify-between pt-4 border-t border-gray-800/30">
             <div className="text-left">
-              <div className="text-gray-200 font-black text-sm" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8)', filter: 'contrast(1.2)' }}>{timeAgo}</div>
-              <div className="text-gray-400 text-xs font-bold" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}>{exactTime} {timezoneAbbr}</div>
+              <div className="text-gray-200 font-black text-sm" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', textShadow: '0 1px 3px rgba(0,0,0,0.8)', filter: 'contrast(1.2)' }}>{timeAgo}</div>
+              <div className="text-gray-400 text-xs font-bold" style={{ fontFamily: 'var(--font-montserrat), Montserrat, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.6)' }}>{exactTime} {timezoneAbbr}</div>
             </div>
             
             <motion.button
@@ -313,6 +316,7 @@ export default function NewsCard({ article, index }: NewsCardProps) {
                 border: `3px solid ${sentimentColors.border}`,
                 boxShadow: `0 0 30px ${sentimentColors.glow}60, 0 8px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)`,
                 transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                fontFamily: 'var(--font-montserrat), Montserrat, sans-serif',
                 textShadow: '0 1px 3px rgba(0,0,0,0.8)',
                 filter: 'contrast(1.2) brightness(1.1)',
                 backdropFilter: 'blur(15px)',

@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
-import { Space_Grotesk } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import './globals.css'
 
-const spaceGrotesk = Space_Grotesk({ 
+const montserrat = Montserrat({ 
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
+  variable: '--font-montserrat',
 })
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={spaceGrotesk.className}>
+      <body className={`${montserrat.className} ${montserrat.variable}`}>
         <Toaster position="top-right" />
         {children}
       </body>
