@@ -10,6 +10,7 @@ interface Article {
   content: string
   category: string
   sentiment?: string
+  sentimentIntensity?: string
   imageUrl: string | null
   createdAt: string
   author: {
@@ -90,13 +91,13 @@ export default function NewsGrid({ category }: NewsGridProps) {
 
   return (
     <motion.div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
-      initial={{ opacity: 0, y: 60 }}
+      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-items-center"
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
-        duration: 1.0,
-        delay: 0.8,
-        ease: [0.16, 1, 0.3, 1]
+        duration: 0.6,
+        delay: 0.2,
+        ease: [0.4, 0, 0.2, 1]
       }}
     >
       {articles.map((article, index) => (

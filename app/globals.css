@@ -68,5 +68,36 @@ a {
     border: 1px solid rgba(255, 255, 255, 0.03);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
+  
+  .compact-card {
+    width: 280px;
+    height: 120px;
+    overflow: hidden;
+  }
+
+  .title-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Focus styles for keyboard navigation */
+  *:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 0;
+  }
 }
 
