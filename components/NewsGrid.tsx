@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import NewsCard from './NewsCard'
+import SearchBar from './SearchBar'
 import { motion } from 'framer-motion'
 
 interface Article {
@@ -24,12 +25,28 @@ interface NewsGridProps {
 
 export default function NewsGrid({ category }: NewsGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     fetchArticles()
   }, [category])
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredArticles(articles)
+    } else {
+      const query = searchQuery.toLowerCase()
+      const filtered = articles.filter(article =>
+        article.title.toLowerCase().includes(query) ||
+        article.content.toLowerCase().includes(query) ||
+        article.category.toLowerCase().includes(query)
+      )
+      setFilteredArticles(filtered)
+    }
+  }, [searchQuery, articles])
 
   const fetchArticles = async () => {
     try {
@@ -43,6 +60,7 @@ export default function NewsGrid({ category }: NewsGridProps) {
       
       if (response.ok) {
         setArticles(data.articles)
+        setFilteredArticles(data.articles)
       } else {
         setError(data.error || 'Failed to fetch articles')
       }
@@ -51,6 +69,10 @@ export default function NewsGrid({ category }: NewsGridProps) {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
   }
 
   if (loading) {
@@ -83,34 +105,95 @@ export default function NewsGrid({ category }: NewsGridProps) {
         className="text-center py-12"
       >
         <div className="glass-effect rounded-2xl p-12 border border-gray-700 max-w-md mx-auto">
-          <p className="text-gray-400 text-lg">No articles yet. Stay tuned.</p>
+          <p className="text-gray-400 text-lg">No posts yet. Stay tuned.</p>
         </div>
       </motion.div>
     )
   }
 
   return (
-    <motion.div 
-      className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.6,
-        delay: 0.2,
-        ease: [0.4, 0, 0.2, 1]
-      }}
-      style={{
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
-        WebkitOverflowScrolling: 'touch'
-      }}
-    >
-      {articles.map((article, index) => (
-        <div key={article.id} className="snap-start flex-shrink-0">
-          <NewsCard article={article} index={index} />
+    <>
+      {/* Search Bar */}
+      <SearchBar onSearch={handleSearch} />
+
+      {/* Results Count */}
+      {searchQuery && (
+        <div className="text-center mb-4">
+          <p className="text-gray-400 text-sm">
+            Found {filteredArticles.length} post{filteredArticles.length !== 1 ? 's' : ''} matching "{searchQuery}"
+          </p>
         </div>
-      ))}
-    </motion.div>
+      )}
+
+      {/* No Results Message */}
+      {filteredArticles.length === 0 && searchQuery && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-12"
+        >
+          <div className="glass-effect rounded-2xl p-12 border border-gray-700 max-w-md mx-auto">
+            <p className="text-gray-400 text-lg">No posts found for "{searchQuery}"</p>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="mt-4 px-6 py-2 rounded-lg font-bold text-sm"
+              style={{
+                background: 'linear-gradient(135deg, #00D4FF, #00A8E8)',
+                color: '#000'
+              }}
+            >
+              Clear Search
+            </button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Articles Grid */}
+      {filteredArticles.length > 0 && (
+        <motion.div 
+          className="flex gap-8 overflow-x-auto pb-20 snap-x snap-mandatory"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.6,
+            delay: 0.2,
+            ease: [0.4, 0, 0.2, 1]
+          }}
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(0, 212, 255, 0.5) rgba(0, 0, 0, 0.2)',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
+          {filteredArticles.map((article, index) => (
+            <div key={article.id} className="snap-start flex-shrink-0">
+              <NewsCard article={article} index={index} />
+            </div>
+          ))}
+      
+          {/* Scrollbar styling for Webkit browsers */}
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              height: 8px;
+            }
+            
+            div::-webkit-scrollbar-track {
+              background: rgba(0, 0, 0, 0.2);
+              border-radius: 4px;
+            }
+            
+            div::-webkit-scrollbar-thumb {
+              background: rgba(0, 212, 255, 0.5);
+              border-radius: 4px;
+            }
+            
+            div::-webkit-scrollbar-thumb:hover {
+              background: rgba(0, 212, 255, 0.7);
+            }
+          `}</style>
+        </motion.div>
+      )}
+    </>
   )
 }
 

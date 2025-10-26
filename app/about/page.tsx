@@ -56,8 +56,8 @@ export default function AboutPage() {
               </h1>
               
               <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                Your premier source for real-time crypto news with AI-powered sentiment analysis. 
-                We deliver breaking news and market insights faster than anyone else.
+                Your premier source for real-time crypto & market news with AI-powered sentiment analysis. 
+                We deliver breaking news and analysis faster than anyone else.
               </p>
 
               <div className="space-y-3 mb-8">

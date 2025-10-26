@@ -30,7 +30,7 @@ function HomeContent() {
         >
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-              Trending Articles
+              Latest Posts
             </h2>
             <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
           </div>
@@ -62,7 +62,7 @@ function HomeContent() {
                 className="glass-effect p-6 rounded-xl border border-gray-800 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300"
               >
                 <h3 className="text-xl font-bold text-white mb-2">{item}</h3>
-                <p className="text-gray-400">Real-time market analysis and insights</p>
+                <p className="text-gray-400">Real-time market news and analysis</p>
               </motion.div>
             ))}
           </div>

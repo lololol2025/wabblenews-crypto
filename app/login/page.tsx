@@ -7,48 +7,33 @@ import Navbar from '@/components/Navbar'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
 import { motion } from 'framer-motion'
 
-export default function SignUpPage() {
+export default function LoginPage() {
   const router = useRouter()
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-  })
+  const [username, setUsername] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (formData.username.length < 3) {
+    if (username.length < 3) {
       alert('Username must be at least 3 characters')
       return
     }
 
     setLoading(true)
 
-    // Simple client-side storage for demo
     try {
       const users = JSON.parse(localStorage.getItem('wabble_users') || '[]')
-      
-      // Check if username exists
-      if (users.some((u: any) => u.username === formData.username)) {
-        alert('Username already taken')
+      const user = users.find((u: any) => u.username === username)
+
+      if (!user) {
+        alert('User not found. Please sign up first.')
         setLoading(false)
         return
       }
 
-      users.push({
-        username: formData.username,
-        email: formData.email,
-        createdAt: new Date().toISOString()
-      })
-
-      localStorage.setItem('wabble_users', JSON.stringify(users))
-      localStorage.setItem('wabble_current_user', JSON.stringify({
-        username: formData.username,
-        email: formData.email
-      }))
-
+      localStorage.setItem('wabble_current_user', JSON.stringify(user))
       setSuccess(true)
       
       setTimeout(() => {
@@ -75,15 +60,15 @@ export default function SignUpPage() {
           style={{
             background: 'transparent',
             backdropFilter: 'blur(20px)',
-            border: '2px solid rgba(0, 212, 255, 0.3)',
-            boxShadow: '0 8px 32px rgba(0, 212, 255, 0.2)',
+            border: '2px solid rgba(127, 255, 0, 0.3)',
+            boxShadow: '0 8px 32px rgba(127, 255, 0, 0.2)',
           }}
         >
           <h1 className="text-4xl font-black text-center mb-3 text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-            Create Account
+            Welcome Back
           </h1>
           <p className="text-gray-400 text-center mb-8">
-            Join the community to comment on posts
+            Log in to comment and engage
           </p>
 
           {success ? (
@@ -97,7 +82,7 @@ export default function SignUpPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Account Created!</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">Logged In!</h2>
               <p className="text-gray-400">Redirecting to homepage...</p>
             </motion.div>
           ) : (
@@ -112,48 +97,20 @@ export default function SignUpPage() {
                   id="username"
                   required
                   minLength={3}
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-5 py-4 rounded-xl text-white font-medium focus:outline-none transition-all"
                   placeholder="Enter username"
                   style={{
                     background: 'rgba(0, 0, 0, 0.5)',
-                    border: '2px solid rgba(0, 212, 255, 0.3)',
+                    border: '2px solid rgba(127, 255, 0, 0.3)',
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.7)'
-                    e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)'
+                    e.currentTarget.style.borderColor = 'rgba(127, 255, 0, 0.7)'
+                    e.currentTarget.style.boxShadow = '0 0 20px rgba(127, 255, 0, 0.3)'
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
-                    e.currentTarget.style.boxShadow = 'none'
-                  }}
-                />
-                <p className="text-gray-500 text-sm mt-2">At least 3 characters</p>
-              </div>
-
-              {/* Email (Optional) */}
-              <div>
-                <label htmlFor="email" className="block text-white font-bold mb-2">
-                  Email <span className="text-gray-500 font-normal">(optional)</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-5 py-4 rounded-xl text-white font-medium focus:outline-none transition-all"
-                  placeholder="Enter email"
-                  style={{
-                    background: 'rgba(0, 0, 0, 0.5)',
-                    border: '2px solid rgba(0, 212, 255, 0.3)',
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.7)'
-                    e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)'
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
+                    e.currentTarget.style.borderColor = 'rgba(127, 255, 0, 0.3)'
                     e.currentTarget.style.boxShadow = 'none'
                   }}
                 />
@@ -167,22 +124,22 @@ export default function SignUpPage() {
                 whileTap={{ scale: 0.98 }}
                 className="w-full py-4 font-black text-lg rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
-                  background: 'linear-gradient(135deg, #00D4FF, #00A8E8)',
+                  background: 'linear-gradient(135deg, #7FFF00, #00C853)',
                   color: '#000',
-                  boxShadow: '0 4px 12px rgba(0, 212, 255, 0.3)'
+                  boxShadow: '0 4px 12px rgba(127, 255, 0, 0.3)'
                 }}
               >
-                {loading ? 'Creating Account...' : 'Create Account'}
+                {loading ? 'Logging In...' : 'Log In'}
               </motion.button>
             </form>
           )}
 
-          {/* Login Link */}
+          {/* Signup Link */}
           {!success && (
             <p className="text-center text-gray-400 mt-8">
-              Already have an account?{' '}
-              <Link href="/login" className="font-bold transition-colors" style={{ color: '#00D4FF' }}>
-                Log In
+              Don't have an account?{' '}
+              <Link href="/signup" className="font-bold transition-colors" style={{ color: '#7FFF00' }}>
+                Sign Up
               </Link>
             </p>
           )}
@@ -191,3 +148,4 @@ export default function SignUpPage() {
     </div>
   )
 }
+

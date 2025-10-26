@@ -1,92 +1,146 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 
 const timezones = [
-  { value: 'America/New_York', label: 'EST (New York)', offset: 'UTC-5' },
-  { value: 'America/Los_Angeles', label: 'PST (Los Angeles)', offset: 'UTC-8' },
-  { value: 'Europe/London', label: 'GMT (London)', offset: 'UTC+0' },
-  { value: 'Europe/Paris', label: 'CET (Paris)', offset: 'UTC+1' },
-  { value: 'Asia/Tokyo', label: 'JST (Tokyo)', offset: 'UTC+9' },
-  { value: 'Asia/Shanghai', label: 'CST (Shanghai)', offset: 'UTC+8' },
-  { value: 'Australia/Sydney', label: 'AEST (Sydney)', offset: 'UTC+10' },
+  { value: 'UTC-12', label: 'UTC-12:00 (Baker Island)', offset: -12 },
+  { value: 'UTC-11', label: 'UTC-11:00 (American Samoa)', offset: -11 },
+  { value: 'UTC-10', label: 'UTC-10:00 (Hawaii)', offset: -10 },
+  { value: 'UTC-9', label: 'UTC-09:00 (Alaska)', offset: -9 },
+  { value: 'UTC-8', label: 'UTC-08:00 (PST - Los Angeles)', offset: -8 },
+  { value: 'UTC-7', label: 'UTC-07:00 (MST - Denver)', offset: -7 },
+  { value: 'UTC-6', label: 'UTC-06:00 (CST - Chicago)', offset: -6 },
+  { value: 'UTC-5', label: 'UTC-05:00 (EST - New York)', offset: -5 },
+  { value: 'UTC-4', label: 'UTC-04:00 (AST - Atlantic)', offset: -4 },
+  { value: 'UTC-3', label: 'UTC-03:00 (Buenos Aires)', offset: -3 },
+  { value: 'UTC-2', label: 'UTC-02:00 (Mid-Atlantic)', offset: -2 },
+  { value: 'UTC-1', label: 'UTC-01:00 (Azores)', offset: -1 },
+  { value: 'UTC+0', label: 'UTC+00:00 (London, GMT)', offset: 0 },
+  { value: 'UTC+1', label: 'UTC+01:00 (Paris, Berlin)', offset: 1 },
+  { value: 'UTC+2', label: 'UTC+02:00 (Cairo, Athens)', offset: 2 },
+  { value: 'UTC+3', label: 'UTC+03:00 (Moscow, Istanbul)', offset: 3 },
+  { value: 'UTC+4', label: 'UTC+04:00 (Dubai)', offset: 4 },
+  { value: 'UTC+5', label: 'UTC+05:00 (Karachi)', offset: 5 },
+  { value: 'UTC+5:30', label: 'UTC+05:30 (India)', offset: 5.5 },
+  { value: 'UTC+6', label: 'UTC+06:00 (Dhaka)', offset: 6 },
+  { value: 'UTC+7', label: 'UTC+07:00 (Bangkok)', offset: 7 },
+  { value: 'UTC+8', label: 'UTC+08:00 (Beijing, Singapore)', offset: 8 },
+  { value: 'UTC+9', label: 'UTC+09:00 (Tokyo, Seoul)', offset: 9 },
+  { value: 'UTC+10', label: 'UTC+10:00 (Sydney)', offset: 10 },
+  { value: 'UTC+11', label: 'UTC+11:00 (Solomon Islands)', offset: 11 },
+  { value: 'UTC+12', label: 'UTC+12:00 (Auckland)', offset: 12 },
+  { value: 'UTC+13', label: 'UTC+13:00 (Samoa)', offset: 13 },
+  { value: 'UTC+14', label: 'UTC+14:00 (Kiribati)', offset: 14 },
 ]
 
 export default function TimezoneSelector() {
+  const [selected, setSelected] = useState('UTC+0')
   const [isOpen, setIsOpen] = useState(false)
-  const [selected, setSelected] = useState(timezones[0])
 
   useEffect(() => {
     const saved = localStorage.getItem('timezone')
     if (saved) {
-      const tz = timezones.find(t => t.value === saved)
-      if (tz) setSelected(tz)
+      setSelected(saved)
     } else {
       // Auto-detect timezone
-      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone
-      const tz = timezones.find(t => t.value === detected)
-      if (tz) {
-        setSelected(tz)
-        localStorage.setItem('timezone', tz.value)
-      }
+      const offset = -(new Date().getTimezoneOffset() / 60)
+      const detected = timezones.find(tz => tz.offset === offset)
+      if (detected) setSelected(detected.value)
     }
   }, [])
 
-  const handleSelect = (tz: typeof timezones[0]) => {
-    setSelected(tz)
-    localStorage.setItem('timezone', tz.value)
+  const handleSelect = (value: string) => {
+    setSelected(value)
+    localStorage.setItem('timezone', value)
     setIsOpen(false)
   }
 
+  const currentTz = timezones.find(tz => tz.value === selected) || timezones[12]
+
   return (
     <div className="relative">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-700 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm"
+        style={{
+          background: 'rgba(127, 255, 0, 0.1)',
+          border: '1px solid rgba(127, 255, 0, 0.3)',
+          color: '#7FFF00',
+          transition: 'all 0.25s ease-in-out'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(127, 255, 0, 0.2)'
+          e.currentTarget.style.borderColor = 'rgba(127, 255, 0, 0.5)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(127, 255, 0, 0.1)'
+          e.currentTarget.style.borderColor = 'rgba(127, 255, 0, 0.3)'
+        }}
       >
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="text-sm font-semibold text-white">{selected.offset}</span>
-        <svg className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span>{selected}</span>
+        <svg 
+          className="w-3 h-3" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+          style={{
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease-in-out'
+          }}
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
-      </motion.button>
+      </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full mt-2 right-0 w-56 glass-effect rounded-lg border border-gray-700 shadow-xl z-50 overflow-hidden max-h-64 overflow-y-auto scrollbar-hide"
+      {isOpen && (
+        <div 
+          className="absolute top-full right-0 mt-2 rounded-lg overflow-hidden shadow-2xl z-50"
+          style={{
+            background: 'rgba(20, 20, 20, 0.95)',
+            border: '1px solid rgba(127, 255, 0, 0.3)',
+            backdropFilter: 'blur(20px)',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            width: '280px'
+          }}
+        >
+          {timezones.map((tz) => (
+            <button
+              key={tz.value}
+              onClick={() => handleSelect(tz.value)}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all text-left"
+              style={{
+                background: selected === tz.value ? 'rgba(127, 255, 0, 0.2)' : 'transparent',
+                color: selected === tz.value ? '#7FFF00' : '#fff',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+              }}
+              onMouseEnter={(e) => {
+                if (selected !== tz.value) {
+                  e.currentTarget.style.background = 'rgba(127, 255, 0, 0.1)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selected !== tz.value) {
+                  e.currentTarget.style.background = 'transparent'
+                }
+              }}
             >
-              {timezones.map((tz) => (
-                <button
-                  key={tz.value}
-                  onClick={() => handleSelect(tz)}
-                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--color-accent-primary)]/10 transition-colors text-left"
-                >
-                  <div>
-                    <div className="text-sm font-medium text-white">{tz.label}</div>
-                    <div className="text-xs text-gray-400">{tz.offset}</div>
-                  </div>
-                  {selected.value === tz.value && (
-                    <svg className="w-4 h-4 text-[var(--color-accent-primary)]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              <span>{tz.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Click outside to close */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </div>
   )
 }
