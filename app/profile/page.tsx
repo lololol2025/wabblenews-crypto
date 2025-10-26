@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
 import { motion } from 'framer-motion'
 
-export default function SignUpPage() {
+export default function ProfilePage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     username: '',
@@ -16,14 +15,32 @@ export default function SignUpPage() {
     profilePhoto: '',
   })
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const currentUser = localStorage.getItem('wabble_current_user')
+    if (!currentUser) {
+      router.push('/login')
+      return
+    }
+    
+    const user = JSON.parse(currentUser)
+    setFormData({
+      username: user.username,
+      name: user.name,
+      password: '',
+      profilePhoto: user.profilePhoto || '/profile-icon.jpg',
+    })
+  }, [router])
 
   const validatePassword = (password: string): string | null => {
-    if (password.length < 8) return 'Password must be at least 8 characters'
-    if (!/[A-Z]/.test(password)) return 'Password must contain at least 1 uppercase letter'
-    if (!/[a-z]/.test(password)) return 'Password must contain at least 1 lowercase letter'
-    if (!/[0-9]/.test(password)) return 'Password must contain at least 1 number'
+    if (password && password.length > 0) {
+      if (password.length < 8) return 'Password must be at least 8 characters'
+      if (!/[A-Z]/.test(password)) return 'Password must contain at least 1 uppercase letter'
+      if (!/[a-z]/.test(password)) return 'Password must contain at least 1 lowercase letter'
+      if (!/[0-9]/.test(password)) return 'Password must contain at least 1 number'
+    }
     return null
   }
 
@@ -51,48 +68,56 @@ export default function SignUpPage() {
       return
     }
 
-    const passwordError = validatePassword(formData.password)
-    if (passwordError) {
-      setError(passwordError)
-      return
+    if (formData.password) {
+      const passwordError = validatePassword(formData.password)
+      if (passwordError) {
+        setError(passwordError)
+        return
+      }
     }
 
     setLoading(true)
 
     try {
       const users = JSON.parse(localStorage.getItem('wabble_users') || '[]')
+      const currentUser = JSON.parse(localStorage.getItem('wabble_current_user') || '{}')
       
-      // Check if username exists
-      if (users.some((u: any) => u.username === formData.username)) {
+      // Check if username is taken by another user
+      const existingUser = users.find((u: any) => u.username === formData.username && u.username !== currentUser.username)
+      if (existingUser) {
         setError('⚠️ Username already taken! Please choose another.')
         setLoading(false)
         return
       }
 
-      const newUser = {
-        username: formData.username,
-        name: formData.name,
-        password: formData.password,
-        profilePhoto: formData.profilePhoto || '/profile-icon.jpg',
-        createdAt: new Date().toISOString()
+      // Find and update user
+      const userIndex = users.findIndex((u: any) => u.username === currentUser.username)
+      if (userIndex !== -1) {
+        users[userIndex] = {
+          ...users[userIndex],
+          username: formData.username,
+          name: formData.name,
+          ...(formData.password && { password: formData.password }),
+          profilePhoto: formData.profilePhoto,
+        }
+
+        localStorage.setItem('wabble_users', JSON.stringify(users))
+        localStorage.setItem('wabble_current_user', JSON.stringify({
+          username: formData.username,
+          name: formData.name,
+          profilePhoto: formData.profilePhoto,
+        }))
+
+        // Trigger profile update event
+        window.dispatchEvent(new Event('profileUpdated'))
+
+        setSuccess(true)
+        setTimeout(() => {
+          router.push('/')
+        }, 1500)
       }
-
-      users.push(newUser)
-
-      localStorage.setItem('wabble_users', JSON.stringify(users))
-      localStorage.setItem('wabble_current_user', JSON.stringify({
-        username: newUser.username,
-        name: newUser.name,
-        profilePhoto: newUser.profilePhoto
-      }))
-
-      setSuccess(true)
-      
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
     } catch (error) {
-      alert('Something went wrong!')
+      setError('Failed to update profile')
     } finally {
       setLoading(false)
     }
@@ -117,10 +142,10 @@ export default function SignUpPage() {
           }}
         >
           <h1 className="text-4xl font-black text-center mb-3 text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-            Create Account
+            Edit Profile
           </h1>
           <p className="text-gray-400 text-center mb-8">
-            Join the community to comment on posts
+            Update your profile information
           </p>
 
           {error && (
@@ -140,11 +165,22 @@ export default function SignUpPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Account Created!</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">Profile Updated!</h2>
               <p className="text-gray-400">Redirecting to homepage...</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Profile Photo Preview */}
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <img 
+                    src={formData.profilePhoto} 
+                    alt="Profile" 
+                    className="w-24 h-24 rounded-full object-cover border-4 border-[var(--color-accent-primary)]" 
+                  />
+                </div>
+              </div>
+
               {/* Username */}
               <div>
                 <label htmlFor="username" className="block text-white font-bold mb-2">
@@ -172,7 +208,6 @@ export default function SignUpPage() {
                     e.currentTarget.style.boxShadow = 'none'
                   }}
                 />
-                <p className="text-gray-500 text-sm mt-2">At least 3 characters</p>
               </div>
 
               {/* Name */}
@@ -206,17 +241,16 @@ export default function SignUpPage() {
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-white font-bold mb-2">
-                  Password
+                  New Password <span className="text-gray-500 font-normal">(leave blank to keep current)</span>
                 </label>
                 <input
                   type="password"
                   id="password"
-                  required
                   minLength={8}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-5 py-4 rounded-xl text-white font-medium focus:outline-none transition-all"
-                  placeholder="Enter password"
+                  placeholder="Enter new password"
                   style={{
                     background: 'rgba(0, 0, 0, 0.5)',
                     border: '2px solid rgba(0, 212, 255, 0.3)',
@@ -236,7 +270,7 @@ export default function SignUpPage() {
               {/* Profile Photo */}
               <div>
                 <label htmlFor="photo" className="block text-white font-bold mb-2">
-                  Profile Photo <span className="text-gray-500 font-normal">(optional)</span>
+                  Change Profile Photo
                 </label>
                 <input
                   type="file"
@@ -249,11 +283,6 @@ export default function SignUpPage() {
                     border: '2px solid rgba(0, 212, 255, 0.3)',
                   }}
                 />
-                {formData.profilePhoto && (
-                  <div className="mt-3 flex justify-center">
-                    <img src={formData.profilePhoto} alt="Preview" className="w-20 h-20 rounded-full object-cover border-2 border-[var(--color-accent-primary)]" />
-                  </div>
-                )}
               </div>
 
               {/* Submit Button */}
@@ -269,22 +298,13 @@ export default function SignUpPage() {
                   boxShadow: '0 4px 12px rgba(0, 212, 255, 0.3)'
                 }}
               >
-                {loading ? 'Creating Account...' : 'Create Account'}
+                {loading ? 'Updating...' : 'Update Profile'}
               </motion.button>
             </form>
-          )}
-
-          {/* Login Link */}
-          {!success && (
-            <p className="text-center text-gray-400 mt-8">
-              Already have an account?{' '}
-              <Link href="/login" className="font-bold transition-colors" style={{ color: '#00D4FF' }}>
-                Log In
-              </Link>
-            </p>
           )}
         </motion.div>
       </main>
     </div>
   )
 }
+

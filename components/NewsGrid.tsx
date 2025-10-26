@@ -21,9 +21,10 @@ interface Article {
 
 interface NewsGridProps {
   category?: string
+  selectedCategories?: string[]
 }
 
-export default function NewsGrid({ category }: NewsGridProps) {
+export default function NewsGrid({ category, selectedCategories = [] }: NewsGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,9 +36,29 @@ export default function NewsGrid({ category }: NewsGridProps) {
   }, [category])
 
   useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredArticles(articles)
-    } else {
+    let filtered = articles
+
+    // Apply search filter
+    if (searchQuery.trim() !== '') {
+      filtered = filtered.filter(article =>
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    // Apply category filter
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(article =>
+        selectedCategories.includes(article.category)
+      )
+    }
+
+    setFilteredArticles(filtered)
+  }, [articles, searchQuery, selectedCategories])
+
+  useEffect(() => {
+    if (false) {
       const query = searchQuery.toLowerCase()
       const filtered = articles.filter(article =>
         article.title.toLowerCase().includes(query) ||

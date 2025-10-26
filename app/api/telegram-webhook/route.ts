@@ -127,13 +127,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Auto-detect category based on content
+    const detectCategory = (content: string): string => {
+      const lower = content.toLowerCase()
+      if (lower.includes('etf') || lower.includes('exchange traded fund')) return 'ETFs'
+      if (lower.includes('trump') || lower.includes('donald trump')) return 'Trump'
+      if (lower.includes('politic') || lower.includes('election') || lower.includes('government')) return 'Politics'
+      if (lower.includes('regulation') || lower.includes('sec') || lower.includes('regulatory')) return 'Regulation'
+      if (lower.includes('defi') || lower.includes('decentralized finance')) return 'DeFi'
+      if (lower.includes('tech') || lower.includes('technology') || lower.includes('innovation')) return 'Technology'
+      if (lower.includes('market') || lower.includes('trading') || lower.includes('price')) return 'Market Analysis'
+      if (lower.includes('breaking') || lower.includes('urgent') || lower.includes('just in')) return 'Breaking News'
+      return 'Crypto'
+    }
+
+    const detectedCategory = detectCategory(text)
+
     // Create article in database (NO ADMIN NEEDED!)
     const article = await prisma.article.create({
       data: {
         title,
         content: text,
         slug: `${slug}-${Date.now()}`,
-        category: 'Crypto News',
+        category: detectedCategory,
         sentiment,
         imageUrl,
         published: true,

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { translateText } from '@/lib/translate'
 
 interface NewsCardProps {
   article: {
@@ -76,9 +77,12 @@ const formatCardDateTime = (dateString: string, timezoneOffset: number = 0) => {
 }
 
 export default function NewsCard({ article, index }: NewsCardProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [isHovered, setIsHovered] = useState(false)
   const [timeDisplay, setTimeDisplay] = useState({ exactTime: '', relativeTime: '', isOlderThanYear: false })
+  const [translatedTitle, setTranslatedTitle] = useState(article.title)
+  const [translatedContent, setTranslatedContent] = useState(article.content)
+  const [isTranslating, setIsTranslating] = useState(false)
   const sentimentColors = getSentimentColors(article.sentiment || 'neutral', article.sentimentIntensity || 'normal')
   
   // Get first image for header - if no image, don't show image area
@@ -111,6 +115,35 @@ export default function NewsCard({ article, index }: NewsCardProps) {
     }
   }, [article.createdAt])
 
+  // Auto-translate when language changes
+  useEffect(() => {
+    const translateContent = async () => {
+      if (language === 'en') {
+        setTranslatedTitle(article.title)
+        setTranslatedContent(article.content)
+        return
+      }
+
+      setIsTranslating(true)
+      try {
+        const [title, content] = await Promise.all([
+          translateText(article.title, language),
+          translateText(article.content.substring(0, 300), language) // Translate first 300 chars
+        ])
+        setTranslatedTitle(title)
+        setTranslatedContent(content)
+      } catch (error) {
+        console.error('Translation error:', error)
+        setTranslatedTitle(article.title)
+        setTranslatedContent(article.content)
+      } finally {
+        setIsTranslating(false)
+      }
+    }
+
+    translateContent()
+  }, [language, article.title, article.content])
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -136,8 +169,8 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           border: `2px solid ${sentimentColors.color}`,
           transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
           boxShadow: isHovered 
-            ? `0 12px 30px rgba(0, 0, 0, 0.5), 0 0 30px ${sentimentColors.glow}`
-            : `0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px ${sentimentColors.glow}`,
+            ? `0 8px 20px rgba(0, 0, 0, 0.4)`
+            : `0 2px 8px rgba(0, 0, 0, 0.2)`,
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           backdropFilter: 'blur(10px)',
           background: 'rgba(13, 13, 13, 0.8)',
@@ -239,10 +272,12 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               WebkitLineClamp: hasImage ? 5 : 8,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              flex: 1
+              flex: 1,
+              opacity: isTranslating ? 0.6 : 1,
+              transition: 'opacity 0.3s'
             }}
           >
-            {article.title}
+            {translatedTitle}
           </h3>
 
           {/* Footer - Category tag only */}
@@ -261,16 +296,16 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           style={{
             background: `linear-gradient(135deg, ${sentimentColors.color}, ${sentimentColors.color}dd)`,
             color: '#000',
-            boxShadow: `0 4px 12px ${sentimentColors.glow}`,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             transform: 'scale(1)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.05)'
-            e.currentTarget.style.boxShadow = `0 6px 20px ${sentimentColors.glow}`
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
-            e.currentTarget.style.boxShadow = `0 4px 12px ${sentimentColors.glow}`
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'
           }}
         >
           {t('view')}
@@ -292,12 +327,12 @@ export default function NewsCard({ article, index }: NewsCardProps) {
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.05)'
             e.currentTarget.style.background = `${sentimentColors.color}22`
-            e.currentTarget.style.boxShadow = `0 6px 20px ${sentimentColors.glow}`
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
             e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'
           }}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

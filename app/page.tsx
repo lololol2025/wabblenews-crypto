@@ -6,13 +6,37 @@ import NewsGrid from '@/components/NewsGrid'
 import Hero from '@/components/Hero'
 import CryptoPriceTicker from '@/components/CryptoPriceTicker'
 import { motion } from 'framer-motion'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 function HomeContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category') || undefined
   const { t } = useLanguage()
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  const categories = [
+    'ETFs',
+    'Politics',
+    'Trump',
+    'Market Analysis',
+    'Crypto',
+    'Regulation',
+    'Technology',
+    'DeFi',
+    'Breaking News'
+  ]
+
+  const toggleCategory = (cat: string) => {
+    setSelectedCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    )
+  }
+
+  const clearFilters = () => {
+    setSelectedCategories([])
+  }
 
   return (
     <div className="min-h-screen">
@@ -35,35 +59,78 @@ function HomeContent() {
               <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
                 {t('latestPosts')}
               </h2>
-              <button
-                className="p-2 rounded-lg transition-all duration-300"
-                style={{
-                  background: 'rgba(0, 212, 255, 0.1)',
-                  border: '1px solid rgba(0, 212, 255, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(0, 212, 255, 0.2)'
-                  e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'
-                  e.currentTarget.style.transform = 'scale(1.05)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'
-                  e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
-                  e.currentTarget.style.transform = 'scale(1)'
-                }}
-                onClick={() => {
-                  // Filter functionality
-                  alert('Filter options coming soon!')
-                }}
-              >
-                <img src="/filter-icon.png" alt="Filter" className="w-5 h-5" />
-              </button>
+              <div className="relative">
+                <button
+                  className="p-2 rounded-lg transition-all duration-300"
+                  style={{
+                    background: 'rgba(0, 212, 255, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(0, 212, 255, 0.2)'
+                    e.currentTarget.style.transform = 'scale(1.05)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'
+                    e.currentTarget.style.transform = 'scale(1)'
+                  }}
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                >
+                  <img src="/filter-icon.png" alt="Filter" className="w-5 h-5" />
+                </button>
+
+                {/* Filter Dropdown */}
+                {isFilterOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      className="absolute top-full left-0 mt-2 w-64 rounded-lg overflow-hidden shadow-2xl z-50"
+                      style={{
+                        background: 'rgba(13, 13, 13, 0.98)',
+                        border: '1px solid rgba(0, 212, 255, 0.3)',
+                        backdropFilter: 'blur(20px)'
+                      }}
+                    >
+                      <div className="p-4">
+                        <div className="flex justify-between items-center mb-3">
+                          <h3 className="text-white font-bold">Filter by Category</h3>
+                          {selectedCategories.length > 0 && (
+                            <button
+                              onClick={clearFilters}
+                              className="text-xs text-red-400 hover:text-red-300"
+                            >
+                              Clear All
+                            </button>
+                          )}
+                        </div>
+                        <div className="space-y-2 max-h-80 overflow-y-auto">
+                          {categories.map((cat) => (
+                            <label
+                              key={cat}
+                              className="flex items-center gap-2 p-2 rounded hover:bg-[var(--color-accent-primary)]/10 cursor-pointer transition-all"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedCategories.includes(cat)}
+                                onChange={() => toggleCategory(cat)}
+                                className="w-4 h-4 rounded accent-[var(--color-accent-primary)]"
+                              />
+                              <span className="text-sm text-gray-300">{cat}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </div>
             </div>
             <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
           </div>
         </motion.div>
 
-        <NewsGrid category={category} />
+        <NewsGrid category={category} selectedCategories={selectedCategories} />
       </main>
 
       {/* Social Media Section */}

@@ -23,6 +23,24 @@ export default function Navbar() {
     if (user) {
       setCurrentUser(JSON.parse(user))
     }
+
+    // Listen for profile updates
+    const handleProfileUpdate = () => {
+      const updatedUser = localStorage.getItem('wabble_current_user')
+      if (updatedUser) {
+        setCurrentUser(JSON.parse(updatedUser))
+      } else {
+        setCurrentUser(null)
+      }
+    }
+
+    window.addEventListener('profileUpdated', handleProfileUpdate)
+    window.addEventListener('storage', handleProfileUpdate)
+
+    return () => {
+      window.removeEventListener('profileUpdated', handleProfileUpdate)
+      window.removeEventListener('storage', handleProfileUpdate)
+    }
   }, [])
   
   const handleLogout = () => {
@@ -122,7 +140,11 @@ export default function Navbar() {
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform duration-300"
                   >
-                    <Image src="/profile-icon.jpg" alt="Profile" width={40} height={40} className="object-cover" />
+                    <img 
+                      src={currentUser.profilePhoto || '/profile-icon.jpg'} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover" 
+                    />
                   </button>
 
                   {isProfileOpen && (
