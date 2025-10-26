@@ -172,8 +172,8 @@ export default function ContactPage() {
 
       <footer className="glass-effect border-t border-gray-800 mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} <span className="text-green-400 font-black">WabbleNews</span>. All rights reserved.</p>
+          <div className="flex justify-center items-center">
+            <p className="text-gray-500 text-sm text-center">&copy; {new Date().getFullYear()} <span className="text-green-400 font-black">WabbleNews</span>. All rights reserved.</p>
           </div>
         </div>
       </footer>

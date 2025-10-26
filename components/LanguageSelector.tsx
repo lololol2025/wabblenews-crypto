@@ -47,7 +47,7 @@ export default function LanguageSelector() {
           e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
         }}
       >
-        <img src="/language-icon.png" alt="Language" className="w-4 h-4" />
+        <img src="/language-icon.png" alt="Language" className="w-5 h-5" />
         <span>{currentLang.code.toUpperCase()}</span>
         <svg 
           className="w-3 h-3" 

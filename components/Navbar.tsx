@@ -93,7 +93,7 @@ export default function Navbar() {
                 <Link href={link.href}>
                   <motion.div
                     whileTap={{ scale: 0.96 }}
-                    className="relative px-7 py-3 rounded-2xl text-lg font-bold text-gray-400 overflow-hidden group"
+                    className="relative px-7 py-3 rounded-2xl text-lg font-bold text-gray-400 overflow-hidden group whitespace-nowrap"
                   >
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100"
@@ -120,7 +120,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-[var(--color-accent-primary)] hover:scale-110 transition-transform duration-300"
+                    className="w-10 h-10 rounded-full overflow-hidden hover:scale-110 transition-transform duration-300"
                   >
                     <Image src="/profile-icon.jpg" alt="Profile" width={40} height={40} className="object-cover" />
                   </button>
@@ -131,7 +131,12 @@ export default function Navbar() {
                         className="fixed inset-0 z-40"
                         onClick={() => setIsProfileOpen(false)}
                       />
-                      <div className="absolute top-full right-0 mt-2 w-48 rounded-lg overflow-hidden shadow-2xl z-50"
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="absolute top-full right-0 mt-2 w-48 rounded-lg overflow-hidden shadow-2xl z-50"
                         style={{
                           background: 'rgba(13, 13, 13, 0.98)',
                           border: '1px solid rgba(0, 212, 255, 0.3)',
@@ -140,17 +145,17 @@ export default function Navbar() {
                       >
                         <button
                           onClick={() => router.push('/profile')}
-                          className="w-full px-4 py-3 text-left text-white hover:bg-[var(--color-accent-primary)]/20 transition-all"
+                          className="w-full px-4 py-3 text-left text-white hover:bg-[var(--color-accent-primary)]/20 transition-all duration-200"
                         >
                           Edit Profile
                         </button>
                         <button
                           onClick={handleLogout}
-                          className="w-full px-4 py-3 text-left text-red-400 hover:bg-red-500/20 transition-all border-t border-gray-800"
+                          className="w-full px-4 py-3 text-left text-red-400 hover:bg-red-500/20 transition-all duration-200 border-t border-gray-800"
                         >
                           Log Out
                         </button>
-                      </div>
+                      </motion.div>
                     </>
                   )}
                 </div>
@@ -158,13 +163,13 @@ export default function Navbar() {
                 <Link href="/signup">
                   <motion.div
                     whileTap={{ scale: 0.96 }}
-                    className="px-5 py-2 rounded-lg font-bold text-sm"
+                    className="px-5 py-2 rounded-lg font-bold text-sm whitespace-nowrap"
                     style={{
                       background: 'linear-gradient(135deg, #00D4FF, #00A8E8)',
                       color: '#000'
                     }}
                   >
-                    {t('signUp')}
+                    Sign Up
                   </motion.div>
                 </Link>
               )}

@@ -24,7 +24,7 @@ export default function Hero() {
             className="text-6xl md:text-7xl lg:text-8xl font-black mb-6"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'linear-gradient(135deg, #fff 0%, #00D4FF 50%, #7FFF00 100%)',
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #00D4FF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'

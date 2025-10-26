@@ -36,23 +36,27 @@ function HomeContent() {
                 {t('latestPosts')}
               </h2>
               <button
-                className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300"
+                className="p-2 rounded-lg transition-all duration-300"
                 style={{
                   background: 'rgba(0, 212, 255, 0.1)',
-                  border: '1px solid rgba(0, 212, 255, 0.3)',
-                  color: '#00D4FF'
+                  border: '1px solid rgba(0, 212, 255, 0.3)'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(0, 212, 255, 0.2)'
                   e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'
+                  e.currentTarget.style.transform = 'scale(1.05)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'
                   e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+                onClick={() => {
+                  // Filter functionality
+                  alert('Filter options coming soon!')
                 }}
               >
-                <img src="/filter-icon.png" alt="Filter" className="w-4 h-4" />
-                <span>Filter</span>
+                <img src="/filter-icon.png" alt="Filter" className="w-5 h-5" />
               </button>
             </div>
             <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
@@ -70,10 +74,11 @@ function HomeContent() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl font-black text-white mb-4 text-center" style={{ fontFamily: 'var(--font-heading)' }}>
-            Follow WabbleNews on your favorite social platforms
-          </h2>
-          <p className="text-gray-400 text-center mb-12"></p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-white mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+              Follow WabbleNews on your favorite social platforms
+            </h2>
+          </div>
           
           <div className="flex justify-center items-center gap-6 flex-wrap max-w-5xl mx-auto">
             {[
@@ -139,8 +144,8 @@ function HomeContent() {
 
       <footer className="glass-effect border-t border-gray-800 mt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center text-gray-500">
-            <p>&copy; {new Date().getFullYear()} <span style={{ color: '#00FF7F' }} className="font-black">WabbleNews</span>. All rights reserved.</p>
+          <div className="flex justify-center items-center">
+            <p className="text-gray-500 text-center">&copy; {new Date().getFullYear()} <span style={{ color: '#00FF7F' }} className="font-black">WabbleNews</span>. All rights reserved.</p>
           </div>
         </div>
       </footer>
