@@ -164,18 +164,21 @@ export default function NewsCard({ article, index }: NewsCardProps) {
             {/* Time in Image */}
             <div className="absolute bottom-3 left-3 z-10">
               <div 
-                className="px-3 py-2 rounded-lg font-bold backdrop-blur-sm"
+                className="px-3 py-1.5 rounded-lg font-bold backdrop-blur-sm whitespace-nowrap"
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
                   color: '#fff',
                   fontFamily: 'var(--font-heading)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  fontSize: timeDisplay.isOlderThanYear ? '10px' : '12px'
+                  fontSize: timeDisplay.isOlderThanYear ? '10px' : '11px'
                 }}
               >
-                <div className="leading-tight">{timeDisplay.exactTime}</div>
-                {!timeDisplay.isOlderThanYear && (
-                  <div className="text-[10px] text-gray-400 mt-1">{timeDisplay.relativeTime}</div>
+                {timeDisplay.isOlderThanYear ? (
+                  <span>{timeDisplay.exactTime}</span>
+                ) : (
+                  <span>
+                    {timeDisplay.exactTime} <span className="text-gray-400">({timeDisplay.relativeTime})</span>
+                  </span>
                 )}
               </div>
             </div>
@@ -213,10 +216,13 @@ export default function NewsCard({ article, index }: NewsCardProps) {
               >
                 {t(sentimentColors.label)}
               </span>
-              <div className="text-xs text-gray-400 font-medium text-right">
-                <div className={timeDisplay.isOlderThanYear ? 'text-[10px]' : ''}>{timeDisplay.exactTime}</div>
-                {!timeDisplay.isOlderThanYear && (
-                  <div className="text-[10px]">{timeDisplay.relativeTime}</div>
+              <div className="text-xs text-gray-400 font-medium text-right whitespace-nowrap">
+                {timeDisplay.isOlderThanYear ? (
+                  <span className="text-[10px]">{timeDisplay.exactTime}</span>
+                ) : (
+                  <span>
+                    {timeDisplay.exactTime} <span className="text-[10px]">({timeDisplay.relativeTime})</span>
+                  </span>
                 )}
               </div>
             </div>
