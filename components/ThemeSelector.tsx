@@ -5,18 +5,18 @@ import { useState, useEffect } from 'react'
 const themes = [
   { name: 'Dark', bg: '#0D0D0D', text: '#FFFFFF', accent: '#00D4FF' },
   { name: 'Black', bg: '#000000', text: '#FFFFFF', accent: '#FFFFFF' },
-  { name: 'White', bg: '#FFFFFF', text: '#000000', accent: '#000000' },
+  { name: 'White', bg: '#F5F5F5', text: '#000000', accent: '#0066CC' },
   { name: 'Purple', bg: '#1A0033', text: '#E0D4FF', accent: '#9D4EDD' },
-  { name: 'Blue', bg: '#001F3F', text: '#E0F0FF', accent: '#007BFF' },
+  { name: 'Blue', bg: '#001529', text: '#E0F0FF', accent: '#1890FF' },
   { name: 'Red', bg: '#1F0000', text: '#FFE0E0', accent: '#DC143C' },
   { name: 'Green', bg: '#001F0A', text: '#E0FFE8', accent: '#00C853' },
-  { name: 'Orange', bg: '#1F1000', text: '#FFF0E0', accent: '#FF6B00' },
+  { name: 'Orange', bg: '#1F1400', text: '#FFF0E0', accent: '#FF8C00' },
   { name: 'Cyan', bg: '#001F1F', text: '#E0FFFF', accent: '#00E5FF' },
   { name: 'Pink', bg: '#1F0014', text: '#FFE0F5', accent: '#FF1493' },
-  { name: 'Yellow', bg: '#1F1F00', text: '#FFFFE0', accent: '#FFD700' },
+  { name: 'Yellow', bg: '#1F1A00', text: '#FFFEF0', accent: '#FFD700' },
   { name: 'Indigo', bg: '#0A001F', text: '#E0E0FF', accent: '#6610F2' },
   { name: 'Teal', bg: '#001F14', text: '#E0FFF5', accent: '#20C997' },
-  { name: 'Brown', bg: '#1F1000', text: '#F5E8E0', accent: '#8B4513' },
+  { name: 'Brown', bg: '#1A0F00', text: '#F5E8E0', accent: '#8B4513' },
   { name: 'Gray', bg: '#1A1A1A', text: '#E0E0E0', accent: '#6C757D' },
 ]
 
