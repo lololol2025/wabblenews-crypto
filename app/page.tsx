@@ -31,9 +31,30 @@ function HomeContent() {
           viewport={{ once: true }}
         >
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-              {t('latestPosts')}
-            </h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-4xl font-black text-white" style={{ fontFamily: 'var(--font-heading)' }}>
+                {t('latestPosts')}
+              </h2>
+              <button
+                className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300"
+                style={{
+                  background: 'rgba(0, 212, 255, 0.1)',
+                  border: '1px solid rgba(0, 212, 255, 0.3)',
+                  color: '#00D4FF'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 212, 255, 0.2)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.5)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(0, 212, 255, 0.1)'
+                  e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
+                }}
+              >
+                <img src="/filter-icon.png" alt="Filter" className="w-4 h-4" />
+                <span>Filter</span>
+              </button>
+            </div>
             <div className="h-1 flex-1 ml-8 bg-gradient-to-r from-[var(--color-accent-primary)]/30 to-transparent" />
           </div>
         </motion.div>
@@ -54,7 +75,7 @@ function HomeContent() {
           </h2>
           <p className="text-gray-400 text-center mb-12"></p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          <div className="flex justify-center items-center gap-6 flex-wrap max-w-5xl mx-auto">
             {[
               {
                 name: 'YouTube',
@@ -95,16 +116,21 @@ function HomeContent() {
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="glass-effect p-8 rounded-2xl border border-gray-800 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300 text-center group"
+                className="glass-effect p-6 rounded-2xl border border-gray-800 hover:border-[var(--color-accent-primary)]/50 transition-all duration-300 text-center group"
+                style={{ width: '170px' }}
               >
-                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${platform.bg} flex items-center justify-center mx-auto mb-4 group-hover:shadow-lg group-hover:shadow-${platform.color}/50 transition-all duration-300`}
-                  style={{ color: platform.color }}>
-                  {platform.icon}
+                <div className="flex justify-center mb-3">
+                  <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${platform.bg} flex items-center justify-center group-hover:shadow-lg transition-all duration-300`}
+                    style={{ color: platform.color, boxShadow: `0 0 15px ${platform.color}40` }}>
+                    <div className="w-8 h-8">
+                      {platform.icon}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                <h3 className="text-base font-bold text-white mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
                   {platform.name}
                 </h3>
-                <p className="text-gray-400 text-sm">{platform.handle}</p>
+                <p className="text-gray-400 text-xs">{platform.handle}</p>
               </motion.a>
             ))}
           </div>

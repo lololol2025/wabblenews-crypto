@@ -3,22 +3,40 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useRouter } from 'next/navigation'
 import LanguageSelector from './LanguageSelector'
 import TimezoneSelector from './TimezoneSelector'
 import ThemeSelector from './ThemeSelector'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState<any>(null)
   const { t } = useLanguage()
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem('wabble_current_user')
+    if (user) {
+      setCurrentUser(JSON.parse(user))
+    }
+  }, [])
   
+  const handleLogout = () => {
+    localStorage.removeItem('wabble_current_user')
+    setCurrentUser(null)
+    setIsProfileOpen(false)
+    router.push('/')
+  }
+
   const navLinks = [
     { name: t('home'), href: '/' },
-    { name: t('aboutUs'), href: '/about' },
+    { name: 'About Me', href: '/about' },
     { name: t('contact'), href: '/contact' },
     { name: t('socialMedia'), href: '/social' },
-    { name: t('signUp'), href: '/signup' },
   ]
 
   return (
@@ -94,6 +112,62 @@ export default function Navbar() {
               <LanguageSelector />
               <TimezoneSelector />
               <ThemeSelector />
+            </div>
+
+            {/* Profile Icon or Sign Up */}
+            <div className="ml-4 pl-4 border-l border-gray-700">
+              {currentUser ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-[var(--color-accent-primary)] hover:scale-110 transition-transform duration-300"
+                  >
+                    <Image src="/profile-icon.jpg" alt="Profile" width={40} height={40} className="object-cover" />
+                  </button>
+
+                  {isProfileOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setIsProfileOpen(false)}
+                      />
+                      <div className="absolute top-full right-0 mt-2 w-48 rounded-lg overflow-hidden shadow-2xl z-50"
+                        style={{
+                          background: 'rgba(13, 13, 13, 0.98)',
+                          border: '1px solid rgba(0, 212, 255, 0.3)',
+                          backdropFilter: 'blur(20px)'
+                        }}
+                      >
+                        <button
+                          onClick={() => router.push('/profile')}
+                          className="w-full px-4 py-3 text-left text-white hover:bg-[var(--color-accent-primary)]/20 transition-all"
+                        >
+                          Edit Profile
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full px-4 py-3 text-left text-red-400 hover:bg-red-500/20 transition-all border-t border-gray-800"
+                        >
+                          Log Out
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <Link href="/signup">
+                  <motion.div
+                    whileTap={{ scale: 0.96 }}
+                    className="px-5 py-2 rounded-lg font-bold text-sm"
+                    style={{
+                      background: 'linear-gradient(135deg, #00D4FF, #00A8E8)',
+                      color: '#000'
+                    }}
+                  >
+                    {t('signUp')}
+                  </motion.div>
+                </Link>
+              )}
             </div>
           </div>
 

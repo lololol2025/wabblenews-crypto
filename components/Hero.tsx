@@ -7,17 +7,9 @@ import { useLanguage } from '@/contexts/LanguageContext'
 export default function Hero() {
   const { t } = useLanguage()
   return (
-    <section className="relative h-[600px] w-full overflow-hidden">
-      {/* Background with gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-pink-900/20">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25px 25px, rgba(0, 212, 255, 0.05) 2%, transparent 0%), 
-                           radial-gradient(circle at 75px 75px, rgba(127, 255, 0, 0.05) 2%, transparent 0%)`,
-          backgroundSize: '100px 100px',
-          animation: 'float 20s ease-in-out infinite'
-        }} />
-      </div>
+    <section className="relative h-[600px] w-full overflow-hidden" style={{ backgroundColor: '#0D0D0D' }}>
+      {/* Solid dark background */}
+      <div className="absolute inset-0" style={{ backgroundColor: '#0D0D0D' }}></div>
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center justify-center px-4">
@@ -74,18 +66,7 @@ export default function Hero() {
       </div>
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0E11] to-transparent" />
-      
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-      `}</style>
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0D0D0D] to-transparent" />
     </section>
   )
 }

@@ -11,7 +11,8 @@ export default function SignUpPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
+    name: '',
+    password: '',
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -39,14 +40,15 @@ export default function SignUpPage() {
 
       users.push({
         username: formData.username,
-        email: formData.email,
+        name: formData.name,
+        password: formData.password,
         createdAt: new Date().toISOString()
       })
 
       localStorage.setItem('wabble_users', JSON.stringify(users))
       localStorage.setItem('wabble_current_user', JSON.stringify({
         username: formData.username,
-        email: formData.email
+        name: formData.name
       }))
 
       setSuccess(true)
@@ -132,18 +134,19 @@ export default function SignUpPage() {
                 <p className="text-gray-500 text-sm mt-2">At least 3 characters</p>
               </div>
 
-              {/* Email (Optional) */}
+              {/* Name */}
               <div>
-                <label htmlFor="email" className="block text-white font-bold mb-2">
-                  Email <span className="text-gray-500 font-normal">(optional)</span>
+                <label htmlFor="name" className="block text-white font-bold mb-2">
+                  Name
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  type="text"
+                  id="name"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-5 py-4 rounded-xl text-white font-medium focus:outline-none transition-all"
-                  placeholder="Enter email"
+                  placeholder="Enter your name"
                   style={{
                     background: 'rgba(0, 0, 0, 0.5)',
                     border: '2px solid rgba(0, 212, 255, 0.3)',
@@ -157,6 +160,36 @@ export default function SignUpPage() {
                     e.currentTarget.style.boxShadow = 'none'
                   }}
                 />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label htmlFor="password" className="block text-white font-bold mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  required
+                  minLength={6}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-5 py-4 rounded-xl text-white font-medium focus:outline-none transition-all"
+                  placeholder="Enter password"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    border: '2px solid rgba(0, 212, 255, 0.3)',
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.7)'
+                    e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)'
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)'
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
+                />
+                <p className="text-gray-500 text-sm mt-2">At least 6 characters</p>
               </div>
 
               {/* Submit Button */}

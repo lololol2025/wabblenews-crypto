@@ -2,7 +2,7 @@ export const translations = {
   en: {
     // Navbar
     home: 'Home',
-    aboutUs: 'About Us',
+    aboutUs: 'About Me',
     contact: 'Contact',
     socialMedia: 'Social Media',
     signUp: 'Sign Up',

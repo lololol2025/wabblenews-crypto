@@ -134,11 +134,11 @@ export default function NewsCard({ article, index }: NewsCardProps) {
         style={{
           height: hasImage ? '420px' : '280px',
           border: `2px solid ${sentimentColors.color}`,
-          transform: isHovered ? 'translateY(-8px) scale(1.02)' : 'translateY(0) scale(1)',
+          transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
           boxShadow: isHovered 
-            ? `0 20px 50px rgba(0, 0, 0, 0.4), 0 0 60px ${sentimentColors.glow}, inset 0 0 80px ${sentimentColors.glow}`
-            : `0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px ${sentimentColors.glow}`,
-          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+            ? `0 12px 30px rgba(0, 0, 0, 0.5), 0 0 30px ${sentimentColors.glow}`
+            : `0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px ${sentimentColors.glow}`,
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           backdropFilter: 'blur(10px)',
           background: 'rgba(13, 13, 13, 0.8)',
           cursor: 'pointer'
